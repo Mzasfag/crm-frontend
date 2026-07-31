@@ -1,0 +1,179 @@
+<!-- Main Canvas -->
+<div class="overflow-auto">
+  <main class="flex-1 p-container-padding-mobile md:p-container-padding-desktop overflow-auto">
+    <div class="space-y-8">
+      <!-- Page Header -->
+      <div>
+        <h1
+          class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2"
+        >
+          Workspace Settings &amp; Preferences
+        </h1>
+        <p class="font-body-lg text-body-lg text-secondary">
+          Set your agency's default currency and regional preferences for reports.
+        </p>
+      </div>
+      <!-- Settings Card -->
+      <div
+        class="bg-surface-container-lowest shadow-[0_1px_3px_0_rgba(0,0,0,0.05),_0_1px_2px_0_rgba(0,0,0,0.03)] rounded-2xl border border-secondary-container p-8"
+      >
+        <form (submit)="saveSettings()" [formGroup]="userSettings" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Currency Selection -->
+            <div class="space-y-2">
+              <label
+                class="block font-label-md text-label-md text-on-surface font-semibold mb-1"
+                for="currency"
+              >
+                Currency (العملة)
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span
+                    class="material-symbols-outlined text-secondary text-lg"
+                    data-icon="payments"
+                    >payments</span
+                  >
+                </div>
+                <select
+                  class="block w-full pl-10 pr-10 border border-primary-container py-2.5 text-base font-body-md rounded-lg focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm bg-surface-container-lowest text-on-surface appearance-none transition-shadow"
+                  id="currency"
+                  formControlName="currency"
+                >
+                  <option selected value="" disabled>Select Your Currency</option>
+
+                  <!-- العملات العربية -->
+                  <option value="EGP">Egyptian Pound (EGP)</option>
+                  <option value="SAR">Saudi Riyal (SAR)</option>
+                  <option value="AED">UAE Dirham (AED)</option>
+                  <option value="QAR">Qatari Riyal (QAR)</option>
+                  <option value="KWD">Kuwaiti Dinar (KWD)</option>
+                  <option value="BHD">Bahraini Dinar (BHD)</option>
+                  <option value="OMR">Omani Rial (OMR)</option>
+                  <option value="JOD">Jordanian Dinar (JOD)</option>
+                  <option value="LBP">Lebanese Pound (LBP)</option>
+                  <option value="IQD">Iraqi Dinar (IQD)</option>
+                  <option value="MAD">Moroccan Dirham (MAD)</option>
+                  <option value="TND">Tunisian Dinar (TND)</option>
+
+                  <!-- العملات العالمية الكبرى -->
+                  <option selected="" value="USD">US Dollar (USD)</option>
+                  <option value="EUR">Euro (EUR)</option>
+                  <option value="GBP">British Pound (GBP)</option>
+                  <option value="CAD">Canadian Dollar (CAD)</option>
+                  <option value="AUD">Australian Dollar (AUD)</option>
+                  <option value="CHF">Swiss Franc (CHF)</option>
+                  <option value="JPY">Japanese Yen (JPY)</option>
+                  <option value="CNY">Chinese Yuan (CNY)</option>
+                  <option value="TRY">Turkish Lira (TRY)</option>
+                  <option value="INR">Indian Rupee (INR)</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <span class="material-symbols-outlined text-secondary" data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </div>
+              </div>
+            </div>
+            <!-- Country Selection -->
+            <div class="space-y-2">
+              <label
+                class="block font-label-md text-label-md text-on-surface font-semibold mb-1"
+                for="country"
+              >
+                Country (البلد)
+              </label>
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <span class="material-symbols-outlined text-secondary text-lg" data-icon="public"
+                    >public</span
+                  >
+                </div>
+                <select
+                  class="block w-full pl-10 pr-10 py-2.5 text-base font-body-md rounded-lg focus:outline-none border border-primary-container focus:ring-1 focus:ring-primary focus:border-primary sm:text-sm bg-surface-container-lowest text-on-surface appearance-none transition-shadow"
+                  id="country"
+                  formControlName="country"
+                >
+                  <option selected value="" disabled>Select Your Country</option>
+
+                  <!-- الدول العربية -->
+                  <option value="EG">Egypt</option>
+                  <option value="SA">Saudi Arabia</option>
+                  <option value="AE">United Arab Emirates</option>
+                  <option value="QA">Qatar</option>
+                  <option value="KW">Kuwait</option>
+                  <option value="BH">Bahrain</option>
+                  <option value="OM">Oman</option>
+                  <option value="JO">Jordan</option>
+                  <option value="LB">Lebanon</option>
+                  <option value="IQ">Iraq</option>
+                  <option value="MA">Morocco</option>
+                  <option value="DZ">Algeria</option>
+                  <option value="TN">Tunisia</option>
+
+                  <!-- الدول الكبرى وأمريكا -->
+                  <option selected="" value="US">USA</option>
+                  <option value="CA">Canada</option>
+                  <option value="GB">United Kingdom</option>
+                  <option value="DE">Germany</option>
+                  <option value="FR">France</option>
+                  <option value="IT">Italy</option>
+                  <option value="ES">Spain</option>
+                  <option value="TR">Turkey</option>
+                  <option value="AU">Australia</option>
+                  <option value="IN">India</option>
+                  <option value="CN">China</option>
+                  <option value="JP">Japan</option>
+                </select>
+                <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                  <span class="material-symbols-outlined text-secondary" data-icon="expand_more"
+                    >expand_more</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="border-secondary-container my-6" />
+          <!-- Language Toggle -->
+          <!-- <div class="flex items-center justify-between py-2">
+            <div>
+              <h3 class="font-label-md text-label-md text-on-surface font-semibold">
+                Language (اللغة)
+              </h3>
+              <p class="font-body-md text-body-md text-secondary mt-1">
+                Choose the primary language for the interface.
+              </p>
+            </div>
+            Custom Toggle Switch
+            <div class="flex items-center gap-3">
+              <span class="font-body-md text-sm text-secondary">English</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input class="sr-only peer" formControlName="lang" type="checkbox" value="" />
+                <div
+                  class="w-11 h-6 bg-secondary-container peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-secondary-container after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"
+                ></div>
+              </label>
+              <span class="font-body-md text-sm text-on-surface font-medium" dir="rtl"
+                >العربية</span
+              >
+            </div>
+          </div> -->
+          <!-- Form Actions -->
+          <div class="pt-6 flex justify-end">
+            <button
+              class="bg-[#520B4D] cursor-pointer hover:bg-[#390036] text-on-primary font-label-md text-label-md py-3 px-6 rounded-lg shadow-sm transition-colors duration-200 flex items-center gap-2"
+              type="submit"
+            >
+              @if (isLoading()) {
+                Loading <i class="pi pi-spin pi-spinner text-xl"></i>
+              } @else {
+                <span class="material-symbols-outlined text-sm" data-icon="save">save</span>
+                Save Changes (حفظ التغييرات)
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>

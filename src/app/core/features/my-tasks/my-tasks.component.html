@@ -1,0 +1,218 @@
+<!-- Page Content -->
+<div
+  class="p-container-padding-mobile md:p-container-padding-desktop flex-1 overflow-y-auto space-y-stack-lg bg-background text-on-background min-h-screen"
+>
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-stack-md">
+    <div>
+      <h2
+        class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface"
+      >
+        My Tasks
+      </h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        View and update the status of your assigned tasks.
+      </p>
+    </div>
+  </div>
+
+  <!-- KPIs Cards Section -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- Total Tasks KPI Card -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-5 shadow-xs flex items-center justify-between"
+    >
+      <div>
+        <span class="block text-xs font-label-md text-secondary uppercase tracking-wider mb-1"
+          >Total Tasks</span
+        >
+        <h3 class="text-2xl font-bold text-on-surface">{{ myTasks().length }}</h3>
+      </div>
+      <div
+        class="w-12 h-12 rounded-xl bg-primary-container/20 text-primary flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined text-[24px]">assignment</span>
+      </div>
+    </div>
+
+    <!-- Pending KPI Card -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-5 shadow-xs flex items-center justify-between"
+    >
+      <div>
+        <span class="block text-xs font-label-md text-secondary uppercase tracking-wider mb-1"
+          >Pending</span
+        >
+        <h3 class="text-2xl font-bold text-amber-600">{{ getTasksCountByStatus('Pending') }}</h3>
+      </div>
+      <div
+        class="w-12 h-12 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined text-[24px]">pending_actions</span>
+      </div>
+    </div>
+
+    <!-- In Progress KPI Card -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-5 shadow-xs flex items-center justify-between"
+    >
+      <div>
+        <span class="block text-xs font-label-md text-secondary uppercase tracking-wider mb-1"
+          >In Progress</span
+        >
+        <h3 class="text-2xl font-bold text-blue-600">{{ getTasksCountByStatus('In Progress') }}</h3>
+      </div>
+      <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-800 flex items-center justify-center">
+        <span class="material-symbols-outlined text-[24px]">hourglass_top</span>
+      </div>
+    </div>
+
+    <!-- Completed KPI Card -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-2xl p-5 shadow-xs flex items-center justify-between"
+    >
+      <div>
+        <span class="block text-xs font-label-md text-secondary uppercase tracking-wider mb-1"
+          >Completed</span
+        >
+        <h3 class="text-2xl font-bold text-emerald-600">
+          {{ getTasksCountByStatus('Completed') }}
+        </h3>
+      </div>
+      <div
+        class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center"
+      >
+        <span class="material-symbols-outlined text-[24px]">task_alt</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks List Grid / Table -->
+  <div
+    class="bg-surface-container-lowest border border-outline-variant/40 rounded-3xl shadow-xs overflow-hidden"
+  >
+    <div class="p-stack-md border-b border-surface-container-high bg-surface-bright px-6 py-5">
+      <h3 class="font-title-md text-title-md text-on-surface">Assigned Tasks List</h3>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr
+            class="border-b border-surface-container-high bg-surface-bright/50 text-secondary text-xs uppercase font-label-md"
+          >
+            <th class="px-6 py-4">Task Title</th>
+            <th class="px-6 py-4">Description</th>
+            <th class="px-6 py-4">Current Status</th>
+            <th class="px-6 py-4 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-surface-container-high">
+          @for (task of myTasks(); track task._id) {
+            <tr class="hover:bg-surface-bright/30 transition-colors">
+              <td class="px-6 py-4 font-bold text-on-surface text-sm">{{ task.title }}</td>
+              <td class="px-6 py-4 text-on-surface-variant text-sm max-w-xs truncate">
+                {{ task.description }}
+              </td>
+              <td class="px-6 py-4">
+                <span
+                  [ngClass]="{
+                    'bg-amber-100 text-amber-800': task.status === 'Pending',
+                    'bg-blue-100 text-blue-800': task.status === 'In Progress',
+                    'bg-emerald-100 text-emerald-800': task.status === 'Completed',
+                  }"
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold uppercase"
+                >
+                  {{ task.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <button
+                  (click)="openStatusModal(task)"
+                  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-bold hover:bg-primary transition-colors cursor-pointer"
+                  type="button"
+                >
+                  <span class="material-symbols-outlined text-[16px]">edit</span>
+                  Change Status
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="px-6 py-8 text-center text-secondary text-sm">
+                No tasks assigned to you right now.
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ================= Modal Update Status ================= -->
+@if (isStatusModalOpen()) {
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[rgba(255,255,255,0.5)] font-body-md text-on-background min-h-screen"
+  >
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 bg-on-background/40 backdrop-blur-sm transition-opacity"
+    ></div>
+
+    <form
+      (submit)="updateTaskStatus()"
+      [formGroup]="statusForm"
+      class="relative w-full max-w-md transform overflow-hidden rounded-3xl bg-surface-container-lowest text-left align-middle shadow-2xl transition-all border border-secondary-container z-10"
+    >
+      <div class="flex items-center justify-between border-b border-secondary-container px-6 py-4">
+        <h3 class="font-title-md text-title-md text-on-surface">Update Task Status</h3>
+        <button
+          (click)="closeStatusModal()"
+          class="rounded-full p-2 text-secondary cursor-pointer hover:text-on-surface transition-colors"
+          type="button"
+        >
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <div class="px-6 py-6 space-y-4">
+        <div>
+          <label
+            class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+            for="status"
+          >
+            Select New Status
+          </label>
+          <select
+            class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+            id="status"
+            formControlName="status"
+          >
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+        </div>
+      </div>
+
+      <div
+        class="bg-surface-container-low px-6 py-4 flex flex-row-reverse border-t border-secondary-container gap-3"
+      >
+        <button
+          type="submit"
+          class="inline-flex items-center justify-center rounded-lg bg-primary-container px-5 py-2 font-label-md text-label-md text-on-primary shadow-sm hover:bg-primary transition-colors cursor-pointer font-bold"
+        >
+          Save Status
+        </button>
+        <button
+          (click)="closeStatusModal()"
+          type="button"
+          class="inline-flex items-center justify-center rounded-lg bg-surface-container-lowest border border-secondary-container px-5 py-2 font-label-md text-label-md text-on-surface shadow-sm cursor-pointer transition-colors font-bold"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+}

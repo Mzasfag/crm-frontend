@@ -1,0 +1,4 @@
+.input-focus-glow:focus {
+  box-shadow: 0 0 0 2px rgba(82, 11, 77, 0.2);
+  border-color: #520b4d;
+}

@@ -1,0 +1,174 @@
+<div
+  class="text-on-background min-h-screen font-body-md gradient-bg flex items-center justify-center p-container-padding-mobile md:p-container-padding-desktop"
+>
+  <div class="gradient-blob blob-1"></div>
+  <div class="gradient-blob blob-2"></div>
+  <main
+    class="w-full max-w-5xl relative z-10 grid grid-cols-1 md:grid-cols-2 gap-0 bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-secondary-container"
+  >
+    <!-- Left Panel: Form -->
+    <div class="p-8 md:p-12 flex flex-col justify-center">
+      <div class="mb-8">
+        <svg
+          width="180"
+          height="50"
+          viewBox="0 0 180 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- أيقونة الـ Brand (حرف B متطور مع لمسة تكنولوجية) -->
+          <g transform="translate(4, 5)">
+            <!-- الخلفية أو الإطار المنحني للرمز -->
+            <rect x="0" y="0" width="40" height="40" rx="12" fill="#520B4D" />
+
+            <!-- حرف B مدمج بتصميم أنيق -->
+            <path
+              d="M13 12H21C23.2091 12 25 13.7909 25 16C25 17.843 13.7383 19.317 13 20M13 20H22C24.2091 20 26 21.7909 26 24C26 26.2091 24.2091 28 22 28H13V12ZM13 20H17"
+              stroke="white"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <!-- نقطة صغيرة تعبر عن الذكاء / النظام (OS) -->
+            <circle cx="28" cy="12" r="3" fill="#FFABEE" />
+          </g>
+
+          <!-- اسم المشروع BrandOS -->
+          <text
+            x="56"
+            y="32"
+            font-family="Geist, Inter, sans-serif"
+            font-size="22"
+            font-weight="700"
+            fill="#330030"
+          >
+            Brand
+            <tspan fill="#520B4D">OS</tspan>
+          </text>
+        </svg>
+        <p class="font-body-lg text-body-lg text-secondary">
+          Sign in to your Agency CRM workspace.
+        </p>
+      </div>
+      <form (submit)="onLogin()" [formGroup]="loginForm" class="space-y-6">
+        <div>
+          <label class="block font-label-md text-label-md text-on-surface-variant mb-2" for="email"
+            >Email Address</label
+          >
+          <input
+            [class.!border-red-500]="
+              loginForm?.get(`email`)?.errors && loginForm?.get(`email`)?.touched
+            "
+            [class.!border-green-500]="
+              loginForm?.get(`email`)?.valid && loginForm?.get(`email`)?.touched
+            "
+            class="w-full px-4 py-3 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+            id="email"
+            formControlName="email"
+            placeholder="name@agency.com"
+            type="email"
+          />
+        </div>
+        @if (emailController?.errors && emailController.touched) {
+          @if (emailController?.getError('required')) {
+            <app-error-alert message="Email Is Required" />
+          }
+
+          @if (emailController?.getError('email')) {
+            <app-error-alert message="Please Write Valid Email" />
+          }
+        }
+
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <label class="block font-label-md text-label-md text-on-surface-variant" for="password"
+              >Password</label
+            >
+          </div>
+          <input
+            [class.!border-red-500]="
+              loginForm?.get(`password`)?.errors && loginForm?.get(`password`)?.touched
+            "
+            [class.!border-green-500]="
+              loginForm?.get(`password`)?.valid && loginForm?.get(`password`)?.touched
+            "
+            class="w-full px-4 py-3 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+            id="password"
+            formControlName="password"
+            placeholder="••••••••"
+            required=""
+            type="password"
+          />
+        </div>
+
+        @if (passwordController?.errors && passwordController.touched) {
+          @if (passwordController?.getError('required')) {
+            <app-error-alert message="Password Is Required" />
+          }
+
+          @if (passwordController?.getError('minlength')) {
+            <app-error-alert message="Password Must Be At Least 6 Chars" />
+          }
+        }
+
+        <button
+          [disabled]="loginForm.invalid || isLoading()"
+          class="w-full cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed py-3 px-6 bg-primary-container text-on-primary rounded-lg font-title-md text-title-md hover:bg-surface-tint transition-colors duration-200 shadow-sm flex items-center justify-center gap-2"
+          type="submit"
+        >
+          @if (isLoading()) {
+            Loading<i class="pi pi-spin pi-spinner" style="font-size: 1rem"></i>
+          } @else {
+            Sign In
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0"
+              >arrow_forward</span
+            >
+          }
+        </button>
+      </form>
+      <div class="mt-8 pt-6 border-t border-secondary-container text-center">
+        <p class="font-body-md text-body-md text-secondary">
+          Don't have an account?
+          <a
+            routerLink="/register-company"
+            class="text-primary-container font-semibold hover:underline"
+            href="#"
+            >Create Company Account</a
+          >
+        </p>
+      </div>
+    </div>
+    <!-- Right Panel: Visual -->
+    <div class="hidden md:block relative bg-surface-container-high overflow-hidden">
+      <div class="absolute inset-0 bg-primary-container opacity-[0.03]"></div>
+      <div
+        class="absolute inset-0 p-12 flex flex-col justify-end z-10 bg-linear-to-t from-surface-container-highest/80 to-transparent"
+      >
+        <div class="glass-card p-6 rounded-xl border border-white/40">
+          <div class="flex items-start gap-4">
+            <span
+              class="material-symbols-outlined text-primary-container text-4xl"
+              style="font-variation-settings: 'FILL' 1"
+              >insights</span
+            >
+            <div>
+              <h3 class="font-title-md text-title-md text-on-surface mb-1">
+                Accelerate Agency Growth
+              </h3>
+              <p class="font-body-md text-body-md text-on-surface-variant">
+                Manage clients, campaigns, and team tasks in one unified, high-performance
+                workspace.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <img
+        class="w-full h-full object-cover object-center absolute inset-0 z-0 opacity-80 mix-blend-multiply"
+        data-alt="A sophisticated, high-end 3D abstract illustration featuring sleek geometric shapes in deep plum (#520B4D) and bright white, symbolizing organized data and multi-tenant CRM architecture. The scene is illuminated by soft, professional studio lighting with a clean, light-mode background, evoking a modern corporate and minimalist aesthetic."
+        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkgaJMATYoDgnot9kcHVSgyUbLpxxvLYNOd2JOzMixhnDjU468O-QlU_Nz3NWv751ejzWThItkeJPn_gul6PtVISfoz-fxszC89CpgZuyOQZ_imylK1upkYO9IJ7mvqrwHhBvhm2ZzDd2zJfzv2zAIzqBElwF1WvUynJKCwnb2AtYYbBztY3AbIiDRMsJf5p111dnVkhwXkesr2Sq4rGQCoIC4-3f6z1p8dOFLxF_bnvdOLnezDhaDmRyM3jKU5P2kSTfM1-lzmcY"
+      />
+    </div>
+  </main>
+</div>

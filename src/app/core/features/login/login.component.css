@@ -1,0 +1,32 @@
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #f9f9ff 0%, #e7eefe 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.gradient-blob {
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(82, 11, 77, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+.blob-1 {
+  top: -200px;
+  left: -100px;
+}
+.blob-2 {
+  bottom: -150px;
+  right: -200px;
+  background: radial-gradient(circle, rgba(5, 0, 98, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+}

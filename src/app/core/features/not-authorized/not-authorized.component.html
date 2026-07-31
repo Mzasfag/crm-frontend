@@ -1,0 +1,48 @@
+<div
+  class="min-h-screen bg-background text-on-background flex flex-col items-center justify-center p-6 text-center"
+>
+  <!-- Illustration / Icon Container -->
+  <div
+    class="w-24 h-24 rounded-3xl bg-error-container/20 flex items-center justify-center text-error mb-6 shadow-sm border border-error/20"
+  >
+    <span class="material-symbols-outlined text-[48px]">lock</span>
+  </div>
+
+  <!-- Error Code -->
+  <span
+    class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-error-container text-on-error-container uppercase tracking-widest mb-3"
+  >
+    <span class="material-symbols-outlined text-[14px]">gpp_bad</span>
+    Access Restricted
+  </span>
+
+  <!-- Heading & Description -->
+  <h1
+    class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2"
+  >
+    Unauthorized Access
+  </h1>
+  <p class="font-body-md text-body-md text-on-surface-variant max-w-md mb-8">
+    You do not have the necessary permissions to view this page. Please contact your system
+    administrator if you believe this is an error.
+  </p>
+
+  <!-- Action Buttons -->
+  <div class="flex flex-col sm:flex-row gap-3">
+    <a
+      routerLink="/tasks/my-tasks"
+      class="inline-flex items-center justify-center gap-2 rounded-xl bg-primary-container px-6 py-3 font-label-md text-label-md text-on-primary shadow-sm hover:bg-primary transition-colors cursor-pointer font-bold tracking-wide w-full sm:w-auto"
+    >
+      <span class="material-symbols-outlined text-sm">assignment</span>
+      Go to My Tasks
+    </a>
+
+    <button
+      (click)="back()"
+      class="inline-flex items-center justify-center rounded-xl bg-surface-container-lowest border border-secondary-container px-6 py-3 font-label-md text-label-md text-on-surface shadow-sm cursor-pointer transition-colors hover:bg-surface-bright w-full sm:w-auto font-bold tracking-wide"
+      type="button"
+    >
+      Go Back
+    </button>
+  </div>
+</div>

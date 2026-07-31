@@ -1,0 +1,80 @@
+@keyframes checkmark-reveal {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes path-draw {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes glow-pulse {
+  0% {
+    filter: drop-shadow(0 0 5px rgba(82, 11, 77, 0.2));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(82, 11, 77, 0.4));
+  }
+  100% {
+    filter: drop-shadow(0 0 5px rgba(82, 11, 77, 0.2));
+  }
+}
+
+.success-icon-container {
+  animation:
+    checkmark-reveal 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+    glow-pulse 3s infinite ease-in-out;
+}
+
+.success-path {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: path-draw 0.8s ease-out 0.3s forwards;
+}
+
+.bg-celebration {
+  background: radial-gradient(circle at 50% 50%, rgba(82, 11, 77, 0.05) 0%, transparent 70%);
+}
+
+.credential-field {
+  transition: all 0.2s ease-in-out;
+}
+
+.credential-field:hover {
+  background-color: rgba(82, 11, 77, 0.03);
+  border-color: rgba(82, 11, 77, 0.1);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+
+.copy-success-toast {
+  animation: slideUpFade 0.3s ease-out forwards;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}

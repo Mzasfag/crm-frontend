@@ -1,0 +1,77 @@
+<!-- TopAppBar -->
+<!-- <header
+  class="flex justify-between items-center px-container-padding-desktop w-full h-16 border-b border-secondary-container bg-surface-container-lowest shadow-sm z-10 shrink-0"
+>
+  <div class="flex-1 max-w-xl">
+    <div
+      class="relative  rounded-lg transition-all"
+    >
+      <span
+        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary"
+        >search</span
+      >
+      <input
+        class="w-full pl-10 pr-4 py-2 bg-surface-bleft border border-secondary-container rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:border-primary-container focus:ring-0"
+        placeholder="Search..."
+        type="text"
+      />
+    </div>
+  </div>
+  <div
+  (click)="onLogOut()"
+    class="flex items-center group/group1 bg-red-400 size-10 justify-center rounded-full cursor-pointer transition-all duration-500 hover:bg-red-600 text-white"
+  >
+  <p class="absolute hidden transtion-all duration-500 group-hover/group1:block top-[60px] left-[30px] bg-gray-800 text-white rounded p-1.5 text-sm">Log Out</p>
+    <i class="pi pi-power-off" style="font-size: 18px; font-weight: 600"></i>
+  </div>
+</header> -->
+<!-- TopAppBar -->
+<header
+  class="flex justify-between items-center px-container-padding-desktop w-full h-16 border-b border-secondary-container shadow-sm z-10 shrink-0"
+>
+  <!-- Actions Container (left) - تم إضافة هذا الـ div للحفاظ على التنسيق -->
+  <div class="flex items-center gap-3">
+    <!-- Settings Icon Button (New) - بنفس ستايل الـ LogOut مع تغيير اللون -->
+    <div
+      routerLink="/settings"
+      routerLinkActive="!bg-primary-container !text-white"
+      class="flex items-center relative group/settings bg-gray-100 size-10 justify-center rounded-full cursor-pointer transition-all duration-500 hover:bg-gray-200 text-secondary"
+    >
+      <!-- يمكنك استبدال الأيقونة بأي أيقونة settings أخري لديك -->
+      <p
+        class="absolute w-15 hidden transition-all duration-500 group-hover/settings:block top-[50px] left-[5px] bg-gray-800 text-white rounded p-1.5 text-sm"
+      >
+        Settings
+      </p>
+      <i class="pi pi-cog" style="font-size: 18px; font-weight: 600"></i>
+    </div>
+
+    <!-- Log Out Button (Original) -->
+    <div
+      (click)="onLogOut()"
+      class="flex items-center relative group/logout bg-red-400 size-10 justify-center rounded-full cursor-pointer transition-all duration-500 hover:bg-red-600 text-white"
+    >
+      <p
+        class="absolute hidden w-15 transition-all duration-500 group-hover/logout:block top-[50px] left-[5px] bg-gray-800 text-white rounded p-1.5 text-sm"
+      >
+        Log Out
+      </p>
+      <i class="pi pi-power-off" style="font-size: 18px; font-weight: 600"></i>
+    </div>
+  </div>
+
+  <!-- add deal button -->
+  @if (authService?.userData()?.role?.toLowerCase() == 'admin' ||authService?.userData()?.role?.toLowerCase() == 'manager' || authService?.userData()?.role?.toLowerCase() == 'sales' ) {
+    <div>
+      <button
+        (click)="toggleDealForm()"
+        class="bg-primary-container cursor-pointer text-on-primary font-body-md text-body-md font-medium px-4 py-2.5 rounded-lg hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-2"
+      >
+        New Deal <span class="material-symbols-outlined text-sm">add</span>
+      </button>
+    </div>
+  }
+</header>
+@if (dealFormIsOpen() == true) {
+  <app-add-deal-form (handleDealFormIsOpen)="setDealFormStatus($event)"></app-add-deal-form>
+}

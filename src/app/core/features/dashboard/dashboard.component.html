@@ -1,0 +1,516 @@
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto p-container-padding-desktop bg-surface pb-24 space-y-stack-lg">
+  <!-- Header Section -->
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-md gap-stack-md"
+  >
+    <div>
+      <h2 class="font-headline-lg text-headline-lg text-on-surface mb-1">Dashboard Overview</h2>
+      <p class="font-body-md text-body-md text-secondary">
+        Welcome back, here's what's happening with your agency today.
+      </p>
+    </div>
+    @if (
+      authService?.userData()?.role?.toLowerCase() == 'admin' ||
+      authService?.userData()?.role?.toLowerCase() == 'manager' ||
+      authService?.userData()?.role?.toLowerCase() == 'sales'
+    ) {
+      <button
+        (click)="toggleDealForm()"
+        class="bg-primary-container cursor-pointer text-on-primary font-body-md text-body-md font-medium px-4 py-2.5 rounded-lg hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-2"
+      >
+        <span>New Deal</span>
+        <span class="material-symbols-outlined text-[20px]">add</span>
+      </button>
+    }
+  </div>
+
+  <!-- KPI Metric Cards (Bento Grid) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+    <!-- Revenue -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs hover:-translate-y-1 transition-transform duration-200 group"
+    >
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-2.5 bg-surface-container-low rounded-lg text-primary-container">
+          <span class="material-symbols-outlined text-[22px]">account_balance_wallet</span>
+        </div>
+        <span
+          class="flex items-center text-emerald-700 font-label-md text-label-md bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200"
+        >
+          +{{ dashboardService?.dashboardStatus()?.monthlyGrowth?.revenueGrowthPercentage || 0 }}%
+        </span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">
+        Total Revenue
+      </p>
+      <h3
+        class="font-title-md text-title-md text-on-surface text-3xl group-hover:text-primary-container transition-colors"
+      >
+        {{ dashboardService?.dashboardStatus()?.summary?.totalRevenue || 0 }}
+        <span class="text-base font-normal text-secondary">{{
+          settingsService.userSettings()?.currency!
+        }}</span>
+      </h3>
+    </div>
+
+    <!-- Deals -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs hover:-translate-y-1 transition-transform duration-200 group"
+    >
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-2.5 bg-surface-container-low rounded-lg text-primary-container">
+          <span class="material-symbols-outlined text-[22px]">handshake</span>
+        </div>
+        <span
+          class="text-xs text-secondary font-medium bg-surface-container-low px-2.5 py-1 rounded-full"
+        >
+          Won: {{ dashboardService?.dashboardStatus()?.summary?.wonDeals || 0 }} | Lost:
+          {{ dashboardService?.dashboardStatus()?.summary?.lostDeals || 0 }}
+        </span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">
+        Total Deals
+      </p>
+      <h3
+        class="font-title-md text-title-md text-on-surface text-3xl group-hover:text-primary-container transition-colors"
+      >
+        {{ dashboardService?.dashboardStatus()?.summary?.totalDeals || 0 }}
+      </h3>
+    </div>
+
+    <!-- Pipeline -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs hover:-translate-y-1 transition-transform duration-200 group"
+    >
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-2.5 bg-surface-container-low rounded-lg text-primary-container">
+          <span class="material-symbols-outlined text-[22px]">trending_up</span>
+        </div>
+        <span
+          class="text-xs text-secondary font-medium bg-surface-container-low px-2.5 py-1 rounded-full"
+        >
+          Active Opportunities
+        </span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">
+        Pipeline Value
+      </p>
+      <h3
+        class="font-title-md text-title-md text-on-surface text-3xl group-hover:text-primary-container transition-colors"
+      >
+        {{ dashboardService.dashboardStatus()?.summary?.pipelineValue || 0 }}
+        <span class="text-base font-normal text-secondary">{{
+          settingsService.userSettings()?.currency!
+        }}</span>
+      </h3>
+    </div>
+
+    <!-- Win Rate -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs hover:-translate-y-1 transition-transform duration-200 group"
+    >
+      <div class="flex justify-between items-start mb-4">
+        <div class="p-2.5 bg-surface-container-low rounded-lg text-primary-container">
+          <span class="material-symbols-outlined text-[22px]">emoji_events</span>
+        </div>
+        <span
+          class="text-xs text-secondary font-medium bg-surface-container-low px-2.5 py-1 rounded-full"
+        >
+          Users: {{ dashboardService?.dashboardStatus()?.summary?.totalUsers || 0 }}
+        </span>
+      </div>
+      <p class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-1">
+        Win Rate
+      </p>
+      <h3
+        class="font-title-md text-title-md text-on-surface text-3xl group-hover:text-primary-container transition-colors"
+      >
+        {{ dashboardService?.dashboardStatus()?.summary?.winRate || 0 }}%
+      </h3>
+    </div>
+  </div>
+
+  <!-- Chart Card -->
+  <div
+    class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+  >
+    <div class="flex justify-between items-center mb-6">
+      <h3 class="font-title-md text-title-md text-on-surface">Deals Distribution Analytics</h3>
+      <span class="text-xs text-secondary font-medium">Dynamic Overview by Stages</span>
+    </div>
+
+    <div class="relative w-full h-full">
+      @if (basicData) {
+        <p-chart
+          type="bar"
+          [data]="basicData"
+          [options]="basicOptions"
+          styleClass="w-full h-full"
+        ></p-chart>
+      }
+    </div>
+  </div>
+
+  <!-- Asymmetric Layout for Deals Pipeline & Recent Activity -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+    <!-- Left Column: Pipeline & Customers (2/3 width) -->
+    <div class="lg:col-span-2 space-y-gutter">
+      <!-- Deals by Stage -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+      >
+        <h3
+          class="font-title-md text-title-md text-on-surface mb-6 flex items-center justify-between"
+        >
+          Deals Pipeline by Stage
+        </h3>
+        <div class="space-y-5">
+          <!-- Lead -->
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="font-body-md text-body-md text-on-surface font-medium">
+                Lead ({{ dashboardService?.dashboardStatus()?.deals?.byStage![0]?.count || 0 }})
+              </span>
+              <span class="font-body-md text-body-md text-secondary"
+                >{{ leadPercentage || 0 }}%</span
+              >
+            </div>
+            <div class="w-full bg-secondary-container rounded-full h-2">
+              <div
+                class="bg-gray-400 h-2 rounded-full transition-all duration-500"
+                [style]="{ width: `${leadPercentage || 0}%` }"
+              ></div>
+            </div>
+          </div>
+          <!-- Proposal -->
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="font-body-md text-body-md text-on-surface font-medium">
+                Proposal ({{ dashboardService?.dashboardStatus()?.deals?.byStage![1]?.count || 0 }})
+              </span>
+              <span class="font-body-md text-body-md text-secondary"
+                >{{ proposalDealPercentage || 0 }}%</span
+              >
+            </div>
+            <div class="w-full bg-secondary-container rounded-full h-2">
+              <div
+                class="bg-blue-400 h-2 rounded-full transition-all duration-500"
+                [style]="{ width: `${proposalDealPercentage || 0}%` }"
+              ></div>
+            </div>
+          </div>
+          <!-- Negotiation -->
+          <div>
+            <div class="flex justify-between text-sm mb-1.5">
+              <span class="font-body-md text-body-md text-on-surface font-medium">
+                Negotiation ({{
+                  dashboardService?.dashboardStatus()?.deals?.byStage![2]?.count || 0
+                }})
+              </span>
+              <span class="font-body-md text-body-md text-secondary"
+                >{{ negotiationDealPercentage || 0 }}%</span
+              >
+            </div>
+            <div class="w-full bg-secondary-container rounded-full h-2">
+              <div
+                class="bg-amber-400 h-2 rounded-full transition-all duration-500"
+                [style]="{ width: `${negotiationDealPercentage || 0}%` }"
+              ></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-secondary-container">
+            <div>
+              <span class="font-label-md text-label-md text-secondary block mb-1">
+                Won ({{ dashboardService?.dashboardStatus()?.deals?.byStage![3]?.count || 0 }})
+              </span>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-emerald-400"></div>
+                <span class="font-body-md text-body-md font-semibold text-on-surface"
+                  >{{ wonDealPercentage || 0 }}%</span
+                >
+              </div>
+            </div>
+            <div>
+              <span class="font-label-md text-label-md text-secondary block mb-1">
+                Lost ({{ dashboardService?.dashboardStatus()?.deals?.byStage![4]?.count || 0 }})
+              </span>
+              <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full bg-red-400"></div>
+                <span class="font-body-md text-body-md font-semibold text-on-surface"
+                  >{{ lostDealPercentage || 0 }}%</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Performers -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+      >
+        <h3 class="font-title-md text-title-md text-on-surface mb-6">Top Sales Performers</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          @for (
+            user of dashboardService?.dashboardStatus()?.deals?.topAssignedUsers?.slice(0, 4);
+            track $index
+          ) {
+            <div
+              class="p-4 rounded-xl border border-secondary-container bg-surface-bright flex items-center justify-between hover:border-primary-container/30 transition-colors"
+            >
+              <div>
+                <h4 class="font-body-md text-body-md font-semibold text-on-surface">
+                  {{ user.name }}
+                </h4>
+                <p class="font-label-md text-label-md text-secondary mt-0.5">
+                  {{ user.role }} • Deals: {{ user.totalDeals }}
+                </p>
+              </div>
+              <div class="text-right">
+                <span class="font-body-md text-body-md font-bold text-primary-container">
+                  {{ user.revenue }} {{ settingsService.userSettings()?.currency! }}
+                </span>
+                <p class="text-xs text-emerald-700 font-medium mt-0.5">Won: {{ user.wonDeals }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Latest Customers -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+      >
+        <h3 class="font-title-md text-title-md text-on-surface mb-6">Recent Customers</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse min-w-[500px]">
+            <thead>
+              <tr
+                class="border-b border-secondary-container text-secondary font-label-md text-label-md uppercase tracking-wider"
+              >
+                <th class="pb-3 font-medium">Customer</th>
+                <th class="pb-3 font-medium">Company</th>
+                <th class="pb-3 font-medium text-right">Added</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-secondary-container/50">
+              @for (
+                customer of dashboardService?.dashboardStatus()?.customers?.recent?.slice(0, 4);
+                track $index
+              ) {
+                <tr class="hover:bg-surface-bright transition-colors">
+                  <td class="py-4">
+                    <div class="flex items-center gap-3">
+                      <div
+                        class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-semibold text-sm"
+                      >
+                        {{ customer?.name?.[0].toUpperCase() }}
+                      </div>
+                      <span class="font-body-md text-body-md text-on-surface font-medium">{{
+                        customer?.name
+                      }}</span>
+                    </div>
+                  </td>
+                  <td class="py-4 font-body-md text-body-md text-secondary">
+                    {{ customer?.companyName! }}
+                  </td>
+                  <td class="py-4 font-body-md text-body-md text-secondary text-right">
+                    {{ customer?.createdAt | date: 'short' }}
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td class="p-6 text-center text-error font-medium" colspan="3">
+                    No Customers Available
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Recent Activity / Latest Deals & Campaigns (1/3 width) -->
+    <div class="lg:col-span-1 space-y-gutter">
+      <!-- Latest Deals -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="font-title-md text-title-md text-on-surface">Latest Deals</h3>
+          <a
+            routerLink="/deals"
+            class="font-label-md text-label-md text-primary-container hover:underline font-medium"
+            href="#"
+            >View All</a
+          >
+        </div>
+        <div class="space-y-3.5">
+          @for (
+            deal of dashboardService.dashboardStatus()?.deals?.recent?.slice(0, 4);
+            track $index
+          ) {
+            <div
+              class="group p-4 rounded-xl border border-secondary-container hover:border-primary-container/30 hover:bg-surface-bright transition-all cursor-pointer"
+            >
+              <div class="flex justify-between items-start mb-2">
+                <span
+                  [class]="{
+                    '!text-blue-700 !bg-blue-50 !border-blue-200':
+                      deal?.stage.toLowerCase() == 'proposal',
+                    '!text-green-700 !bg-green-50 !border-green-200':
+                      deal?.stage.toLowerCase() == 'won',
+                    '!text-red-700 !bg-red-50 !border-red-200': deal?.stage.toLowerCase() == 'lost',
+                    '!text-amber-700 !bg-amber-50 !border-amber-200':
+                      deal?.stage.toLowerCase() == 'negotiation',
+                    '!text-orange-700 !bg-orange-50 !border-orange-200':
+                      deal?.stage.toLowerCase() == 'lead',
+                  }"
+                  class="font-label-md text-label-md rounded-full px-2.5 py-0.5 border bg-emerald-50 tracking-wider"
+                  >{{ deal?.stage }}</span
+                >
+                <span class="font-body-md text-body-md font-semibold text-on-surface"
+                  >{{ deal?.value }} {{ settingsService.userSettings()?.currency! }}</span
+                >
+              </div>
+              <h4
+                class="font-body-md text-body-md font-medium text-on-surface mb-1 leading-snug group-hover:text-primary-container transition-colors"
+              >
+                {{ deal?.title }}
+              </h4>
+              <div class="flex items-center gap-1.5 text-secondary">
+                <span class="material-symbols-outlined text-[16px]">domain</span>
+                <span class="font-label-md text-label-md">{{
+                  deal?.customerId?.companyName || 'N/A'
+                }}</span>
+              </div>
+            </div>
+          } @empty {
+            <div class="text-center font-medium text-error py-6">No Deals Available</div>
+          }
+        </div>
+      </div>
+
+      <!-- Campaigns Overview -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+      >
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="font-title-md text-title-md text-on-surface">Active Campaigns</h3>
+          <span
+            class="text-xs bg-primary-fixed text-on-primary-fixed px-2.5 py-1 rounded-full font-semibold"
+          >
+            {{ dashboardService.dashboardStatus()?.campaignsOverview?.activeCampaigns || 0 }} Active
+          </span>
+        </div>
+        <div class="space-y-3 pt-2">
+          <div class="flex justify-between text-sm">
+            <span class="text-secondary font-body-md">Total Budget</span>
+            <span class="font-semibold text-on-surface">
+              {{ dashboardService.dashboardStatus()?.campaignsOverview?.totalBudget || 0 }}
+              {{ settingsService.userSettings()?.currency! }}
+            </span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-secondary font-body-md">Channel</span>
+            <span class="font-semibold text-primary-container">
+              {{
+                dashboardService.dashboardStatus()?.campaignsOverview?.byChannel?.[0]?.channel ||
+                  'Paid Ads'
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Team Roles Breakdown -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+      >
+        <h3 class="font-title-md text-title-md text-on-surface mb-4">Team Roles</h3>
+        <div class="space-y-2.5">
+          @for (roleObj of dashboardService.dashboardStatus()?.users?.byRole; track $index) {
+            <div
+              class="flex justify-between items-center text-sm py-1.5 border-b border-secondary-container/30 last:border-0"
+            >
+              <span class="text-secondary font-body-md">{{ roleObj.role }}</span>
+              <span
+                class="font-semibold bg-surface-container-low px-2.5 py-0.5 rounded text-primary-container"
+              >
+                {{ roleObj.count }}
+              </span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Team Assignees Performance Section -->
+  <div
+    class="bg-surface-container-lowest border border-secondary-container rounded-xl p-6 shadow-xs"
+  >
+    <div class="flex justify-between items-center mb-5">
+      <div>
+        <h3 class="font-title-md text-title-md text-on-surface">Team Assignees Performance</h3>
+        <p class="font-body-md text-body-md text-secondary mt-0.5">
+          Overview of tasks distribution and completion rates per employee.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+      @for (
+        assignee of dashboardService?.dashboardStatus()?.tasksOverview?.byAssignee;
+        track $index
+      ) {
+        <div
+          class="p-4 rounded-xl border border-secondary-container bg-surface-bright flex flex-col justify-between hover:border-primary-container/30 transition-colors"
+        >
+          <div class="flex items-center justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-semibold text-sm"
+              >
+                {{ assignee?.name?.[0]?.toUpperCase() }}
+              </div>
+              <div>
+                <h4 class="font-body-md text-body-md font-semibold text-on-surface">
+                  {{ assignee.name }}
+                </h4>
+                <p class="font-label-md text-label-md text-secondary">{{ assignee.role }}</p>
+              </div>
+            </div>
+            <span
+              class="text-xs bg-surface-container-low text-primary-container px-2.5 py-1 rounded-full font-semibold"
+            >
+              Total: {{ assignee.totalTasks }}
+            </span>
+          </div>
+
+          <div class="space-y-2 pt-3 border-t border-secondary-container/40 text-sm">
+            <div class="flex justify-between">
+              <span class="text-secondary">Pending Tasks:</span>
+              <span class="font-semibold text-on-surface">{{ assignee.pendingTasks }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-secondary">Completed Tasks:</span>
+              <span class="font-semibold text-emerald-700">{{ assignee.completedTasks }}</span>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="col-span-full text-center py-6 text-secondary">
+          No team performance data available.
+        </div>
+      }
+    </div>
+  </div>
+</main>
+
+@if (dealFormIsOpen() == true) {
+  <app-add-deal-form (handleDealFormIsOpen)="setDealFormStatus($event)"></app-add-deal-form>
+}

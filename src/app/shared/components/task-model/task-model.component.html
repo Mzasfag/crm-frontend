@@ -1,0 +1,638 @@
+@if (selectedTaskUpdate() == null) {
+  <!-- Modal Backdrop Overlay -->
+  <div class="bg-background font-body-md text-on-background min-h-screen">
+    <div
+      aria-labelledby="modal-title"
+      aria-modal="true"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8"
+      role="dialog"
+    >
+      <!-- Backdrop with Blur -->
+      <div
+        aria-hidden="true"
+        class="fixed inset-0 bg-on-background/40 backdrop-blur-sm transition-opacity"
+      ></div>
+      <!-- Modal Panel -->
+      <form
+        (submit)="addTask()"
+        [formGroup]="taskForm"
+        class="relative w-full max-w-2xl transform overflow-hidden rounded-3xl bg-surface-container-lowest text-left align-middle shadow-2xl transition-all border border-secondary-container"
+      >
+        <!-- Header -->
+        <div
+          class="flex items-center justify-between border-b border-secondary-container px-6 py-4 sm:px-8 sm:py-6"
+        >
+          <div>
+            <h3 class="font-title-md text-title-md text-on-surface" id="modal-title">
+              Create New Task
+            </h3>
+            <p class="mt-1 font-body-md text-body-md text-secondary">
+              Add a new task to your agency CRM.
+            </p>
+          </div>
+          <button
+            (click)="closeTaskForm()"
+            class="rounded-full p-2 text-secondary cursor-pointer hover:text-on-surface focus:outline-none transition-colors"
+            type="button"
+          >
+            <span class="sr-only">Close</span>
+            <span aria-hidden="true" class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <!-- Body / Form -->
+        <div class="px-6 py-6 sm:p-8 max-h-[75vh] overflow-y-auto">
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
+              <!-- Title Field -->
+              <div class="col-span-1 sm:col-span-2">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="title"
+                  >Task Title <span class="text-error">*</span></label
+                >
+                <div class="relative">
+                  <input
+                    [class.!border-red-500]="titleController?.errors && titleController?.touched"
+                    [class.!border-green-500]="titleController?.valid && titleController?.touched"
+                    class="w-full px-3 py-2 mb-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                    id="title"
+                    formControlName="title"
+                    placeholder="Call customer"
+                    required
+                    type="text"
+                  />
+                </div>
+                @if (titleController?.errors && titleController?.touched) {
+                  @if (titleController?.getError('required')) {
+                    <app-error-alert message="Title Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Description Field -->
+              <div class="col-span-1 sm:col-span-2">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="description"
+                  >Description</label
+                >
+                <div class="relative">
+                  <textarea
+                    [class.!border-red-500]="
+                      descriptionController?.errors && descriptionController?.touched
+                    "
+                    [class.!border-green-500]="
+                      descriptionController?.valid && descriptionController?.touched
+                    "
+                    class="w-full px-3 py-2 mb-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface resize-none"
+                    id="description"
+                    formControlName="description"
+                    rows="3"
+                    placeholder="Follow up about the deal"
+                  ></textarea>
+                </div>
+                @if (descriptionController?.errors && descriptionController?.touched) {
+                  @if (descriptionController?.getError('required')) {
+                    <app-error-alert message="Description Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Status Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="status"
+                  >Status</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="status"
+                    formControlName="status"
+                  >
+                    <option value="" disabled selected>Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (statusController?.errors && statusController?.touched) {
+                  @if (statusController?.getError('required')) {
+                    <app-error-alert message="Status Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Priority Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="priority"
+                  >Priority</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="priority"
+                    formControlName="priority"
+                  >
+                    <option value="" disabled selected>Select Priority</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+
+                @if (priorityController?.errors && priorityController?.touched) {
+                  @if (priorityController?.getError('required')) {
+                    <app-error-alert message="Priority Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Due Date Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="dueDate"
+                  >Due Date <span class="text-error">*</span></label
+                >
+                <div class="relative">
+                  <input
+                    [class.!border-red-500]="
+                      dueDateController?.errors && dueDateController?.touched
+                    "
+                    [class.!border-green-500]="
+                      dueDateController?.valid && dueDateController?.touched
+                    "
+                    class="w-full px-3 py-2 mb-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                    id="dueDate"
+                    formControlName="dueDate"
+                    type="date"
+                    required
+                  />
+                </div>
+                @if (dueDateController?.errors && dueDateController?.touched) {
+                  @if (dueDateController?.getError('required')) {
+                    <app-error-alert message="Due Date Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Assigned To Field -->
+              @if (
+               (authService?.userData()?.role?.toLowerCase() == 'admin' ||authService?.userData()?.role?.toLowerCase() == 'manager' || authService?.userData()?.role?.toLowerCase() == 'sales' )
+              ) {
+                <div class="col-span-1">
+                  <label
+                    class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                    for="assignedTo"
+                    >Assigned To</label
+                  >
+                  <div class="relative">
+                    <select
+                      class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                      id="assignedTo"
+                      formControlName="assignedTo"
+                    >
+                      <option value="" disabled selected>Select User</option>
+                      <!-- قم بربطها بقائمة المستخدمين لديك -->
+                      @for (user of userList(); track $index) {
+                        <option [value]="user?._id">{{ user?.name }}</option>
+                      }
+                    </select>
+                    <div
+                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                    </div>
+                  </div>
+                  @if (assignedToController?.errors && assignedToController?.touched) {
+                    @if (assignedToController?.getError('required')) {
+                      <app-error-alert message="Assigned To Is Required" />
+                    }
+                  }
+                </div>
+              }
+
+              <!-- Customer ID Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="customerId"
+                  >Customer</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="customerId"
+                    formControlName="customerId"
+                  >
+                    <option value="" disabled selected>Select Customer</option>
+                    <!-- قم بربطها بقائمة العملاء لديك -->
+                    @for (customer of customerList(); track $index) {
+                      <option [value]="customer?._id">{{ customer?.name }}</option>
+                    }
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (customerIdController?.errors && customerIdController?.touched) {
+                  @if (customerIdController?.getError('required')) {
+                    <app-error-alert message="Customer Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Deal ID Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="dealId"
+                  >Deal</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="dealId"
+                    formControlName="dealId"
+                  >
+                    <option value="" disabled selected>Select Deal</option>
+                    <!-- قم بربطها بقائمة الصفقات لديك -->
+                    @for (deal of dealList(); track $index) {
+                      <option [value]="deal?._id">{{ deal?.title }}</option>
+                    }
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (dealIdController?.errors && dealIdController?.touched) {
+                  @if (dealIdController?.getError('required')) {
+                    <app-error-alert message="Deal Is Required" />
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Footer / Actions -->
+        <div
+          class="bg-surface-container-low px-6 py-4 sm:flex sm:flex-row-reverse sm:px-8 border-t border-secondary-container"
+        >
+          <button
+            [disabled]="taskForm.invalid"
+            class="inline-flex w-full gap-1 items-center disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-[0.98] justify-center rounded-lg bg-primary-container px-6 py-2.5 font-label-md text-label-md text-on-primary shadow-sm hover:bg-primary transition-colors focus:outline-none sm:ml-3 sm:w-auto font-bold tracking-wide"
+            type="submit"
+          >
+            <span
+              class="material-symbols-outlined text-sm"
+              style="font-variation-settings: 'FILL' 1"
+              >save</span
+            >
+            Save Task
+          </button>
+          <button
+            (click)="closeTaskForm()"
+            class="mt-3 inline-flex items-center w-full active:scale-[0.98] justify-center rounded-lg bg-surface-container-lowest border border-secondary-container px-6 py-2.5 font-label-md text-label-md text-on-surface shadow-sm cursor-pointer transition-colors focus:outline-none sm:mt-0 sm:w-auto font-bold tracking-wide"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+} @else {
+  <!-- Modal Backdrop Overlay (Update Task) -->
+  <div class="bg-background font-body-md text-on-background min-h-screen">
+    <div
+      aria-labelledby="modal-title"
+      aria-modal="true"
+      class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8"
+      role="dialog"
+    >
+      <!-- Backdrop with Blur -->
+      <div
+        aria-hidden="true"
+        class="fixed inset-0 bg-on-background/40 backdrop-blur-sm transition-opacity"
+      ></div>
+      <!-- Modal Panel -->
+      <form
+        (submit)="onUpdateTask()"
+        [formGroup]="taskForm"
+        class="relative w-full max-w-2xl transform overflow-hidden rounded-3xl bg-surface-container-lowest text-left align-middle shadow-2xl transition-all border border-secondary-container"
+      >
+        <!-- Header -->
+        <div
+          class="flex items-center justify-between border-b border-secondary-container px-6 py-4 sm:px-8 sm:py-6"
+        >
+          <div>
+            <h3 class="font-title-md text-title-md text-on-surface" id="modal-title">
+              Update Task
+            </h3>
+            <p class="mt-1 font-body-md text-body-md text-secondary">Modify task details</p>
+          </div>
+          <button
+            (click)="closeTaskForm()"
+            class="rounded-full p-2 text-secondary cursor-pointer hover:text-on-surface focus:outline-none transition-colors"
+            type="button"
+          >
+            <span class="sr-only">Close</span>
+            <span aria-hidden="true" class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <!-- Body / Form -->
+        <div class="px-6 py-6 sm:p-8 max-h-[75vh] overflow-y-auto">
+          <div class="space-y-6">
+            <div class="grid grid-cols-1 gap-y-6 gap-x-6 sm:grid-cols-2">
+              <!-- Title Field -->
+              <div class="col-span-1 sm:col-span-2">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="title"
+                  >Task Title <span class="text-error">*</span></label
+                >
+                <div class="relative">
+                  <input
+                    [class.!border-red-500]="titleController?.errors && titleController?.touched"
+                    [class.!border-green-500]="titleController?.valid && titleController?.touched"
+                    class="w-full px-3 py-2 mb-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                    id="title"
+                    formControlName="title"
+                    placeholder="Call customer"
+                    required
+                    type="text"
+                  />
+                </div>
+                @if (titleController?.errors && titleController?.touched) {
+                  @if (titleController?.getError('required')) {
+                    <app-error-alert message="Title Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Description Field -->
+              <div class="col-span-1 sm:col-span-2">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="description"
+                  >Description</label
+                >
+                <div class="relative">
+                  <textarea
+                    [class.!border-red-500]="
+                      descriptionController?.errors && descriptionController?.touched
+                    "
+                    [class.!border-green-500]="
+                      descriptionController?.valid && descriptionController?.touched
+                    "
+                    class="w-full px-3 py-2 mb-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface resize-none"
+                    id="description"
+                    formControlName="description"
+                    rows="3"
+                    placeholder="Follow up about the deal"
+                  ></textarea>
+                </div>
+
+                @if (descriptionController?.errors && descriptionController?.touched) {
+                  @if (descriptionController?.getError('required')) {
+                    <app-error-alert message="Description Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Status Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="status"
+                  >Status</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="status"
+                    formControlName="status"
+                  >
+                    <option value="" disabled selected>Select Status</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (statusController?.errors && statusController?.touched) {
+                  @if (statusController?.getError('required')) {
+                    <app-error-alert message="Status Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Priority Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="priority"
+                  >Priority</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="priority"
+                    formControlName="priority"
+                  >
+                    <option value="" disabled selected>Select Priority</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (priorityController?.errors && priorityController?.touched) {
+                  @if (priorityController?.getError('required')) {
+                    <app-error-alert message="Priority Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Due Date Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="dueDate"
+                  >Due Date <span class="text-error">*</span></label
+                >
+                <div class="relative">
+                  <input
+                    [class.!border-red-500]="
+                      dueDateController?.errors && dueDateController?.touched
+                    "
+                    [class.!border-green-500]="
+                      dueDateController?.valid && dueDateController?.touched
+                    "
+                    class="w-full px-3 py-2 mb-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                    id="dueDate"
+                    formControlName="dueDate"
+                    type="date"
+                    required
+                  />
+                </div>
+                @if (dueDateController?.errors && dueDateController?.touched) {
+                  @if (dueDateController?.getError('required')) {
+                    <app-error-alert message="Due Date Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Assigned To Field -->
+              @if ( (authService?.userData()?.role?.toLowerCase() == 'admin' ||authService?.userData()?.role?.toLowerCase() == 'manager' || authService?.userData()?.role?.toLowerCase() == 'sales' )) {
+                <div class="col-span-1">
+                  <label
+                    class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                    for="assignedTo"
+                    >Assigned To</label
+                  >
+                  <div class="relative">
+                    <select
+                      class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                      id="assignedTo"
+                      formControlName="assignedTo"
+                    >
+                      <option value="" disabled selected>Select User</option>
+                      @for (user of userList(); track $index) {
+                        <option [value]="user?._id">{{ user?.name }}</option>
+                      }
+                    </select>
+                    <div
+                      class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                    </div>
+                  </div>
+                  @if (assignedToController?.errors && assignedToController?.touched) {
+                    @if (assignedToController?.getError('required')) {
+                      <app-error-alert message="Assigned To Is Required" />
+                    }
+                  }
+                </div>
+              }
+
+              <!-- Customer ID Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="customerId"
+                  >Customer</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="customerId"
+                    formControlName="customerId"
+                  >
+                    <option value="" disabled selected>Select Customer</option>
+                    @for (customer of customerList(); track $index) {
+                      <option [value]="customer?._id">{{ customer?.name }}</option>
+                    }
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (customerIdController?.errors && customerIdController?.touched) {
+                  @if (customerIdController?.getError('required')) {
+                    <app-error-alert message="Customer Is Required" />
+                  }
+                }
+              </div>
+
+              <!-- Deal ID Field -->
+              <div class="col-span-1">
+                <label
+                  class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+                  for="dealId"
+                  >Deal</label
+                >
+                <div class="relative">
+                  <select
+                    class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
+                    id="dealId"
+                    formControlName="dealId"
+                  >
+                    <option value="" disabled selected>Select Deal</option>
+                    @for (deal of dealList(); track $index) {
+                      <option [value]="deal?._id">{{ deal?.title }}</option>
+                    }
+                  </select>
+                  <div
+                    class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (dealIdController?.errors && dealIdController?.touched) {
+                  @if (dealIdController?.getError('required')) {
+                    <app-error-alert message="Deal Is Required" />
+                  }
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Footer / Actions -->
+        <div
+          class="bg-surface-container-low px-6 py-4 sm:flex sm:flex-row-reverse sm:px-8 border-t border-secondary-container"
+        >
+          <button
+            [disabled]="taskForm.invalid"
+            class="inline-flex w-full gap-1 items-center disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer active:scale-[0.98] justify-center rounded-lg bg-primary-container px-6 py-2.5 font-label-md text-label-md text-on-primary shadow-sm hover:bg-primary transition-colors focus:outline-none sm:ml-3 sm:w-auto font-bold tracking-wide"
+            type="submit"
+          >
+            <span
+              class="material-symbols-outlined text-sm"
+              style="font-variation-settings: 'FILL' 1"
+              >update</span
+            >
+            Update Task
+          </button>
+          <button
+            (click)="closeTaskForm()"
+            class="mt-3 inline-flex items-center w-full active:scale-[0.98] justify-center rounded-lg bg-surface-container-lowest border border-secondary-container px-6 py-2.5 font-label-md text-label-md text-on-surface shadow-sm cursor-pointer transition-colors focus:outline-none sm:mt-0 sm:w-auto font-bold tracking-wide"
+            type="button"
+          >
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

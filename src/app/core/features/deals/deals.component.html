@@ -1,0 +1,475 @@
+<!-- Page Content -->
+<div class="flex-1 overflow-auto p-container-padding-desktop space-y-stack-lg">
+  <!-- Page Header -->
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-stack-md gap-stack-md"
+  >
+    <div>
+      <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Deals Pipeline</h1>
+      <p class="font-body-md text-body-md text-secondary">
+        Manage and track your agency's ongoing opportunities.
+      </p>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
+      <!-- Search Input -->
+      <div class="relative w-full sm:w-72">
+        <span
+          class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[20px]"
+        >
+          search
+        </span>
+        <input
+          [(ngModel)]="searchTerm"
+          class="w-full pl-10 pr-4 py-2 rounded-lg border border-secondary-container outline-none bg-surface focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md text-on-surface placeholder:text-secondary"
+          placeholder="Search deals..."
+          type="text"
+        />
+      </div>
+
+      <!-- Stage Filter -->
+      <select
+        [(ngModel)]="stageTerm"
+        class="bg-surface border border-secondary-container rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+      >
+        <option value="" selected>All Stages</option>
+        @for (stage of ['Lead', 'Won', 'Lost', 'Proposal', 'Negotiation']; track $index) {
+          <option [value]="stage">{{ stage }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <!-- Bento Grid Stats (KPIs Cards based on Deals JSON) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter mb-stack-lg">
+    <!-- Total Deals -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3
+          class="font-label-md text-label-md text-on-tertiary-fixed-variant uppercase tracking-wider"
+        >
+          Total Deals
+        </h3>
+        <div class="p-2 rounded-lg bg-surface-container-low text-on-tertiary-fixed-variant">
+          <span class="material-symbols-outlined text-[20px]">handshake</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{ dashboardService?.dashboardStatus()?.summary?.totalDeals || 0 }}
+      </p>
+    </div>
+
+    <!-- Total Revenue -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md text-emerald-700 uppercase tracking-wider">
+          Total Revenue
+        </h3>
+        <div class="p-2 rounded-lg bg-emerald-50 text-emerald-700">
+          <span class="material-symbols-outlined text-[20px]">payments</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{ dashboardService?.dashboardStatus()?.summary?.totalRevenue || 0 }}
+        <span class="text-base font-normal text-secondary">{{
+          settingsService?.userSettings()?.currency
+        }}</span>
+      </p>
+    </div>
+
+    <!-- Win Rate -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md text-primary uppercase tracking-wider">Win Rate</h3>
+        <div class="p-2 rounded-lg bg-primary-fixed text-on-primary-fixed">
+          <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{ dashboardService?.dashboardStatus()?.summary?.winRate || 0 }}%
+      </p>
+    </div>
+
+    <!-- Average Deal Value -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3
+          class="font-label-md text-label-md text-on-secondary-container uppercase tracking-wider"
+        >
+          Avg Deal Value
+        </h3>
+        <div class="p-2 rounded-lg bg-secondary-container text-on-secondary-container">
+          <span class="material-symbols-outlined text-[20px]">analytics</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{ dashboardService?.dashboardStatus()?.summary?.averageDealValue || 0 }}
+        <span class="text-base font-normal text-secondary">{{
+          settingsService?.userSettings()?.currency
+        }}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Pipeline Table Card -->
+  <div
+    class="bg-surface-container-lowest rounded-[16px] border border-secondary-container shadow-[0_1px_3px_0_rgba(0,0,0,0.05),_0_1px_2px_0_rgba(0,0,0,0.03)] overflow-hidden"
+  >
+    <div class="overflow-x-auto w-full">
+      <table class="w-full text-left border-collapse min-w-[850px]">
+        <thead>
+          <tr class="border-b border-secondary-container bg-surface-bright">
+            <th
+              class="py-4 px-6 font-label-md text-label-md text-secondary font-medium tracking-wider uppercase"
+            >
+              Title
+            </th>
+            <th
+              class="py-4 px-6 font-label-md text-label-md text-secondary font-medium tracking-wider uppercase"
+            >
+              Value
+            </th>
+            <th
+              class="py-4 px-6 font-label-md text-label-md text-secondary font-medium tracking-wider uppercase"
+            >
+              Stage
+            </th>
+            <th
+              class="py-4 px-6 font-label-md text-label-md text-secondary font-medium tracking-wider uppercase"
+            >
+              Customer
+            </th>
+            <th
+              class="py-4 px-6 font-label-md text-label-md text-secondary font-medium tracking-wider uppercase"
+            >
+              Assigned To
+            </th>
+            <th
+              class="py-4 px-6 font-label-md text-label-md text-secondary font-medium tracking-wider uppercase text-right"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-secondary-container bg-surface-container-lowest">
+          @if (searchTerm.length !== 0 || stageTerm.length !== 0) {
+            @for (deal of dealListCloned()! | searchOnDeal: searchTerm : stageTerm; track $index) {
+              <tr class="hover:bg-surface-bright transition-colors group">
+                <td class="py-4 px-6">
+                  <div class="font-body-md font-medium text-on-surface">
+                    {{ deal?.title! }}
+                  </div>
+                </td>
+                <td class="py-4 px-6 font-body-md font-medium text-on-surface">
+                  {{ deal?.value }} {{ settingsService?.userSettings()?.currency }}
+                </td>
+                <td class="py-4 px-6">
+                  <span
+                    [class]="{
+                      '!text-blue-700': deal?.stage.toLowerCase() == 'proposal',
+                      ' !bg-blue-200': deal?.stage.toLowerCase() == 'proposal',
+                      '  !border-blue-200': deal?.stage.toLowerCase() == 'proposal',
+                      '!text-green-700': deal?.stage.toLowerCase() == 'won',
+                      ' !bg-green-200': deal?.stage.toLowerCase() == 'won',
+                      '  !border-green-200': deal?.stage.toLowerCase() == 'won',
+                      '!text-red-700': deal?.stage.toLowerCase() == 'lost',
+                      ' !bg-red-200': deal?.stage.toLowerCase() == 'lost',
+                      '  !border-red-200': deal?.stage.toLowerCase() == 'lost',
+                      '!text-orange-700': deal?.stage.toLowerCase() == 'lead',
+                      ' !bg-orange-200': deal?.stage.toLowerCase() == 'lead',
+                      '  !border-orange-200': deal?.stage.toLowerCase() == 'lead',
+                    }"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-md text-[11px] border"
+                  >
+                    {{ deal?.stage }}
+                  </span>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-[11px] font-bold text-on-surface"
+                    >
+                      {{ deal?.customerId?.companyName?.[0]?.toUpperCase() || 'C' }}
+                    </div>
+                    <div>
+                      <div class="font-body-md text-on-surface text-sm font-medium">
+                        {{ deal?.customerId?.name }}
+                      </div>
+                      <div class="font-label-md text-secondary text-xs">
+                        {{ deal?.customerId?.companyName }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-[11px] font-bold text-on-surface"
+                    >
+                      {{ deal?.assignedTo?.name?.[0]?.toUpperCase() || 'U' }}
+                    </div>
+                    <span class="font-body-md text-sm text-on-surface">{{
+                      deal?.assignedTo?.name
+                    }}</span>
+                  </div>
+                </td>
+                <td class="py-4 px-6 text-right relative">
+                  <button
+                    (click)="toggleDropDown(deal?._id)"
+                    class="text-secondary cursor-pointer hover:text-primary transition-colors opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-surface-container"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                  </button>
+                  @if (isDropdownOpen(deal?._id)) {
+                    <div
+                      class="absolute right-4 top-12 w-36 bg-surface-container-lowest rounded-xl shadow-xl border border-secondary-container py-1.5 z-50"
+                    >
+                      <!-- Update Button -->
+                      <button
+                        (click)="setToUpdate(deal)"
+                        class="w-full cursor-pointer flex items-center space-x-2 px-4 py-2 text-sm text-on-surface hover:bg-primary-container/10 hover:text-primary transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="w-4 h-4"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                          ></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span class="font-medium">Update</span>
+                      </button>
+
+                      @if (
+                        authService?.userData()?.role?.toLowerCase() == 'admin' ||
+                        authService?.userData()?.role?.toLowerCase() == 'manager'
+                      ) {
+                        <!-- Delete Button -->
+                        <button
+                          (click)="onDeleteDeal(deal?._id!)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-error hover:bg-error-container/20 transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Delete</span>
+                        </button>
+                      }
+                    </div>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="p-6 text-center text-error font-medium" colspan="6">
+                  No Deals Found Matching Your Filters
+                </td>
+              </tr>
+            }
+          } @else {
+            @for (deal of dealListCloned()?.slice(...nevigateArr()); track $index) {
+              <tr class="hover:bg-surface-bright transition-colors group">
+                <td class="py-4 px-6">
+                  <div class="font-body-md font-medium text-on-surface">
+                    {{ deal?.title! }}
+                  </div>
+                </td>
+                <td class="py-4 px-6 font-body-md font-medium text-on-surface">
+                  {{ deal?.value }} {{ settingsService?.userSettings()?.currency }}
+                </td>
+                <td class="py-4 px-6">
+                  <span
+                    [class]="{
+                      '!text-blue-700': deal?.stage.toLowerCase() == 'proposal',
+                      ' !bg-blue-200': deal?.stage.toLowerCase() == 'proposal',
+                      '  !border-blue-200': deal?.stage.toLowerCase() == 'proposal',
+                      '!text-green-700': deal?.stage.toLowerCase() == 'won',
+                      ' !bg-green-200': deal?.stage.toLowerCase() == 'won',
+                      '  !border-green-200': deal?.stage.toLowerCase() == 'won',
+                      '!text-red-700': deal?.stage.toLowerCase() == 'lost',
+                      ' !bg-red-200': deal?.stage.toLowerCase() == 'lost',
+                      '  !border-red-200': deal?.stage.toLowerCase() == 'lost',
+                      '!text-orange-700': deal?.stage.toLowerCase() == 'lead',
+                      ' !bg-orange-200': deal?.stage.toLowerCase() == 'lead',
+                      '  !border-orange-200': deal?.stage.toLowerCase() == 'lead',
+                    }"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full font-label-md text-[11px] border"
+                  >
+                    {{ deal?.stage }}
+                  </span>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-[11px] font-bold text-on-surface"
+                    >
+                      {{ deal?.customerId?.companyName?.[0]?.toUpperCase() || 'C' }}
+                    </div>
+                    <div>
+                      <div class="font-body-md text-on-surface text-sm font-medium">
+                        {{ deal?.customerId?.name }}
+                      </div>
+                      <div class="font-label-md text-secondary text-xs">
+                        {{ deal?.customerId?.companyName }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="flex items-center gap-2.5">
+                    <div
+                      class="w-7 h-7 rounded-full bg-surface-container-high flex items-center justify-center text-[11px] font-bold text-on-surface"
+                    >
+                      {{ deal?.assignedTo?.name?.[0]?.toUpperCase() || 'U' }}
+                    </div>
+                    <span class="font-body-md text-sm text-on-surface">{{
+                      deal?.assignedTo?.name
+                    }}</span>
+                  </div>
+                </td>
+                <td class="py-4 px-6 text-right relative">
+                  <button
+                    (click)="toggleDropDown(deal?._id)"
+                    class="text-secondary cursor-pointer hover:text-primary transition-colors opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-surface-container"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                  </button>
+                  @if (isDropdownOpen(deal?._id)) {
+                    <div
+                      class="absolute right-4 top-12 w-36 bg-surface-container-lowest rounded-xl shadow-xl border border-secondary-container py-1.5 z-50"
+                    >
+                      <!-- Update Button -->
+                      <button
+                        (click)="setToUpdate(deal)"
+                        class="w-full cursor-pointer flex items-center space-x-2 px-4 py-2 text-sm text-on-surface hover:bg-primary-container/10 hover:text-primary transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="w-4 h-4"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                          ></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span class="font-medium">Update</span>
+                      </button>
+
+                      @if (
+                        authService?.userData()?.role?.toLowerCase() == 'admin' ||
+                        authService?.userData()?.role?.toLowerCase() == 'manager'
+                      ) {
+                        <!-- Delete Button -->
+                        <button
+                          (click)="onDeleteDeal(deal?._id!)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-error hover:bg-error-container/20 transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Delete</span>
+                        </button>
+                      }
+                    </div>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="p-6 text-center text-error font-medium" colspan="6">
+                  No Deals Available
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    @if (stageTerm.length !== 0 || searchTerm.length !== 0) {
+    } @else {
+      <div
+        class="p-4 border-t border-surface-container-high bg-surface-bright flex justify-between items-center text-on-surface-variant font-body-md text-body-md"
+      >
+        <p>
+          Showing {{ nevigateArr()[0] + 1 }} to
+          {{
+            nevigateArr()[1] >= dealListCloned()?.length!
+              ? dealListCloned()?.length!
+              : nevigateArr()[1]
+          }}
+          of {{ dealListCloned()?.length || 0 }} entries
+        </p>
+        <div class="flex gap-2">
+          <button
+            (click)="prevNeviagete()"
+            [disabled]="stopPrev()"
+            class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            Prev
+          </button>
+          <button
+            (click)="nextNeviagete()"
+            [disabled]="stopNext()"
+            class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<p-confirmdialog key="positionDialog" rejectButtonStyleClass="p-button-outlined" />
+<p-toast />
+
+@if (dealFormIsOpen() == true) {
+  <app-add-deal-form (handleDealFormIsOpen)="handleDealForm($event)" />
+}

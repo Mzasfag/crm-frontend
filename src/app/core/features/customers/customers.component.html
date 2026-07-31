@@ -1,0 +1,438 @@
+<!-- customers page -->
+<main
+  class="flex-1 p-container-padding-mobile md:p-container-padding-desktop overflow-x-hidden space-y-stack-lg"
+>
+  <!-- Header Section -->
+  <div
+    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-stack-md"
+  >
+    <div>
+      <h2
+        class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary"
+      >
+        Customers
+      </h2>
+      <p class="font-body-md text-body-md text-secondary mt-1">
+        Manage and track your client relationships and accounts.
+      </p>
+    </div>
+    <button
+      (click)="toggleCustomerForm()"
+      class="bg-primary-container cursor-pointer text-on-primary font-body-md text-body-md font-medium px-4 py-2.5 rounded-lg hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-2"
+    >
+      <span>New Customer</span>
+      <span class="material-symbols-outlined text-[20px]">add</span>
+    </button>
+  </div>
+
+  <!-- Bento Grid Stats (KPIs Cards) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-gutter mb-stack-lg">
+    <!-- Total Customers -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3
+          class="font-label-md text-label-md text-on-tertiary-fixed-variant uppercase tracking-wider"
+        >
+          Total Customers
+        </h3>
+        <div class="p-2 rounded-lg bg-surface-container-low text-on-tertiary-fixed-variant">
+          <span class="material-symbols-outlined text-[20px]">group</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{ customerListCloned()?.length || 0 }}
+      </p>
+    </div>
+
+    <!-- Active Customers -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md text-emerald-700 uppercase tracking-wider">
+          Active Clients
+        </h3>
+        <div class="p-2 rounded-lg bg-emerald-50 text-emerald-700">
+          <span class="material-symbols-outlined text-[20px]">verified</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{
+          (customerListCloned() || []).filter((c) => c?.status?.toLowerCase() === 'active').length
+        }}
+      </p>
+    </div>
+
+    <!-- Prospects / Inactive -->
+    <div
+      class="bg-surface-container-lowest border border-secondary-container rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md text-amber-700 uppercase tracking-wider">
+          Prospects / Leads
+        </h3>
+        <div class="p-2 rounded-lg bg-amber-50 text-amber-700">
+          <span class="material-symbols-outlined text-[20px]">insights</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{
+          (customerListCloned() || []).filter((c) => c?.status?.toLowerCase() === 'prospect').length
+        }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Filters & Search Bar -->
+  <div
+    class="bg-surface-container-lowest p-4 rounded-xl border border-secondary-container shadow-xs mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between"
+  >
+    <div class="relative w-full sm:w-96">
+      <span
+        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary text-[20px]"
+        >search</span
+      >
+      <input
+        [(ngModel)]="searchTerm"
+        class="w-full pl-10 pr-4 py-2 rounded-lg border border-secondary-container outline-none bg-surface focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md text-on-surface placeholder:text-secondary"
+        placeholder="Search customers..."
+        type="text"
+      />
+    </div>
+    <div class="flex gap-3 w-full sm:w-auto">
+      <select
+        [(ngModel)]="statusTerm"
+        class="px-4 py-2 rounded-lg border border-secondary-container bg-surface outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md text-on-surface w-full sm:w-auto"
+      >
+        <option value="">All Statuses</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="prospect">Prospect</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Data Table -->
+  <div
+    class="bg-surface-container-lowest rounded-xl border border-secondary-container shadow-xs overflow-hidden"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[800px]">
+        <thead>
+          <tr class="bg-surface border-b border-secondary-container">
+            <th
+              class="p-4 font-label-md text-label-md text-secondary uppercase tracking-wider font-medium"
+            >
+              Name
+            </th>
+            <th
+              class="p-4 font-label-md text-label-md text-secondary uppercase tracking-wider font-medium"
+            >
+              Company
+            </th>
+            <th
+              class="p-4 font-label-md text-label-md text-secondary uppercase tracking-wider font-medium"
+            >
+              Status
+            </th>
+            <th
+              class="p-4 font-label-md text-label-md text-secondary uppercase tracking-wider font-medium"
+            >
+              Created By
+            </th>
+            <th
+              class="p-4 font-label-md text-label-md text-secondary uppercase tracking-wider font-medium text-right"
+            >
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-secondary-container font-body-md text-body-md">
+          @if (searchTerm.length !== 0 || statusTerm.length !== 0) {
+            @for (
+              customer of customerListCloned()! | search: searchTerm : statusTerm;
+              track $index
+            ) {
+              <tr class="hover:bg-surface-bright transition-colors group">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-semibold"
+                    >
+                      {{ customer?.name?.[0].toUpperCase() }}
+                    </div>
+                    <div>
+                      <p class="font-semibold text-on-surface">{{ customer?.name }}</p>
+                      <a
+                        target="_top"
+                        [href]="`mailto:${customer?.email}`"
+                        class="text-primary hover:underline text-sm"
+                        >{{ customer?.email }}</a
+                      >
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4 text-on-surface font-medium">{{ customer?.companyName }}</td>
+                <td class="p-4">
+                  <span
+                    [ngClass]="{
+                      ' !text-emerald-700 !border-emerald-200':
+                        customer?.status.toLowerCase() == 'active',
+                      ' !text-red-700 !border-red-200':
+                        customer?.status.toLowerCase() == 'inactive',
+                      ' !text-amber-700 !border-amber-200':
+                        customer?.status.toLowerCase() == 'prospect',
+                    }"
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border"
+                  >
+                    {{ customer?.status }}
+                  </span>
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-on-surface font-medium">{{
+                      customer?.createdBy?.name!
+                    }}</span>
+                    <span class="text-secondary text-xs">({{ customer?.createdBy?.role! }})</span>
+                  </div>
+                </td>
+                <td class="p-4 text-right relative">
+                  <button
+                    (click)="toggleDropDown(customer?._id!)"
+                    class="text-secondary cursor-pointer hover:text-primary transition-colors p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                  </button>
+                  @if (isDropdownOpen(customer?._id!)) {
+                    <div
+                      class="absolute right-4 top-12 w-36 bg-surface-container-lowest rounded-xl shadow-xl border border-secondary-container py-1.5 z-50 transform opacity-100 scale-100 transition-all"
+                    >
+                      <!-- Update Button -->
+                      <button
+                        (click)="setToUpdate(customer)"
+                        class="w-full cursor-pointer flex items-center space-x-2 px-4 py-2 text-sm text-on-surface hover:bg-primary-container/10 hover:text-primary transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="w-4 h-4"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                          ></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span class="font-medium">Update</span>
+                      </button>
+
+                      @if (
+                        authService?.userData()?.role?.toLowerCase() == 'admin' ||
+                        authService?.userData()?.role?.toLowerCase() == 'manager'
+                      ) {
+                        <!-- Delete Button -->
+                        <button
+                          (click)="onDeleteCustomer(customer?._id!)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-error hover:bg-error-container/20 transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Delete</span>
+                        </button>
+                      }
+                    </div>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="p-6 text-center text-error font-medium" colspan="5">
+                  No Customers Found Matching Your Filters
+                </td>
+              </tr>
+            }
+          } @else {
+            @for (customer of customerListCloned()?.slice(...nevigateArr()); track $index) {
+              <tr class="hover:bg-surface-bright transition-colors group">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-semibold"
+                    >
+                      {{ customer?.name?.[0].toUpperCase() }}
+                    </div>
+                    <div>
+                      <p class="font-semibold text-on-surface">{{ customer?.name }}</p>
+                      <a
+                        target="_top"
+                        [href]="`mailto:${customer?.email}`"
+                        class="text-primary hover:underline text-sm"
+                        >{{ customer?.email }}</a
+                      >
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4 text-on-surface font-medium">{{ customer?.companyName }}</td>
+                <td class="p-4">
+                  <span
+                    [ngClass]="{
+                      ' !text-emerald-700 !border-emerald-200':
+                        customer?.status.toLowerCase() == 'active',
+                      ' !text-red-700 !border-red-200':
+                        customer?.status.toLowerCase() == 'inactive',
+                      ' !text-amber-700 !border-amber-200':
+                        customer?.status.toLowerCase() == 'prospect',
+                    }"
+                    class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border"
+                  >
+                    {{ customer?.status }}
+                  </span>
+                </td>
+                <td class="p-4">
+                  <div class="flex items-center gap-2">
+                    <span class="text-on-surface font-medium">{{
+                      customer?.createdBy?.name!
+                    }}</span>
+                    <span class="text-secondary text-xs">({{ customer?.createdBy?.role! }})</span>
+                  </div>
+                </td>
+                <td class="p-4 text-right relative">
+                  <button
+                    (click)="toggleDropDown(customer?._id!)"
+                    class="text-secondary cursor-pointer hover:text-primary transition-colors p-2 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 focus:opacity-100"
+                  >
+                    <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                  </button>
+                  @if (isDropdownOpen(customer?._id!)) {
+                    <div
+                      class="absolute right-4 top-12 w-36 bg-surface-container-lowest rounded-xl shadow-xl border border-secondary-container py-1.5 z-50 transform opacity-100 scale-100 transition-all"
+                    >
+                      <!-- Update Button -->
+                      <button
+                        (click)="setToUpdate(customer)"
+                        class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-on-surface hover:bg-primary-container/10 hover:text-primary transition-colors"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="w-4 h-4"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <path
+                            d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                          ></path>
+                          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                        <span class="font-medium">Update</span>
+                      </button>
+
+                      @if (
+                        authService?.userData()?.role?.toLowerCase() == 'admin' ||
+                        authService?.userData()?.role?.toLowerCase() == 'manager'
+                      ) {
+                        <!-- Delete Button -->
+                        <button
+                          (click)="onDeleteCustomer(customer?._id!)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-error hover:bg-error-container/20 transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Delete</span>
+                        </button>
+                      }
+                    </div>
+                  }
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td class="p-6 text-center text-error font-medium" colspan="5">
+                  No Customers Available
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination Footer -->
+    @if (statusTerm.length !== 0 || searchTerm.length !== 0) {
+    } @else {
+      <div
+        class="p-4 border-t border-surface-container-high bg-surface-bright flex justify-between items-center text-on-surface-variant font-body-md text-body-md"
+      >
+        <p>
+          Showing {{ nevigateArr()[0] + 1 }} to
+          {{
+            nevigateArr()[1] >= customerListCloned()?.length!
+              ? customerListCloned()?.length!
+              : nevigateArr()[1]
+          }}
+          of {{ customerListCloned()?.length || 0 }} entries
+        </p>
+        <div class="flex gap-2">
+          <button
+            (click)="prevNeviagete()"
+            [disabled]="stopPrev()"
+            class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            Prev
+          </button>
+          <button
+            (click)="nextNeviagete()"
+            [disabled]="stopNext()"
+            class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</main>
+
+@if (customerFormIsOpen() == true) {
+  <app-add-customer-form
+    (handleCustomerFormIsOpen)="handleCustomerForm($event)"
+  ></app-add-customer-form>
+}
+
+<p-confirmdialog key="positionDialog" rejectButtonStyleClass="p-button-outlined" />
+<p-toast />

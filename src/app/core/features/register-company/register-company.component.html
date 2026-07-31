@@ -1,0 +1,430 @@
+@if (successPage() == false) {
+  <div
+    class="min-h-screen flex items-center justify-center p-4 bg-background text-on-background antialiased font-body-md"
+  >
+    <div class="w-full max-w-md">
+      <!-- Branding Area -->
+      <div class="flex flex-col items-center mb-stack-lg">
+        <svg
+          width="180"
+          height="50"
+          viewBox="0 0 180 50"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <!-- أيقونة الـ Brand (حرف B متطور مع لمسة تكنولوجية) -->
+          <g transform="translate(4, 5)">
+            <!-- الخلفية أو الإطار المنحني للرمز -->
+            <rect x="0" y="0" width="40" height="40" rx="12" fill="#520B4D" />
+
+            <!-- حرف B مدمج بتصميم أنيق -->
+            <path
+              d="M13 12H21C23.2091 12 25 13.7909 25 16C25 17.843 13.7383 19.317 13 20M13 20H22C24.2091 20 26 21.7909 26 24C26 26.2091 24.2091 28 22 28H13V12ZM13 20H17"
+              stroke="white"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+
+            <!-- نقطة صغيرة تعبر عن الذكاء / النظام (OS) -->
+            <circle cx="28" cy="12" r="3" fill="#FFABEE" />
+          </g>
+
+          <!-- اسم المشروع BrandOS -->
+          <text
+            x="56"
+            y="32"
+            font-family="Geist, Inter, sans-serif"
+            font-size="22"
+            font-weight="700"
+            fill="#330030"
+          >
+            Brand
+            <tspan fill="#520B4D">OS</tspan>
+          </text>
+        </svg>
+        <p class="font-body-md text-body-md text-secondary text-center">
+          Set up your agency workspace to manage clients, deals, and campaigns effectively.
+        </p>
+      </div>
+      <!-- Registration Card -->
+      <div
+        class="bg-surface-container-lowest border border-secondary-container rounded-xl shadow-xl overflow-hidden"
+      >
+        <div class="p-container-padding-desktop">
+          <h2 class="font-title-md text-title-md text-on-surface mb-stack-lg">Register Company</h2>
+          <form
+            (submit)="onRegisterCompany()"
+            [formGroup]="registerCompanyForm"
+            class="space-y-stack-md"
+          >
+            <!-- Company Name -->
+            <div>
+              <label
+                class="block font-label-md text-label-md text-on-surface-variant mb-stack-sm uppercase"
+                for="company_name"
+                >Company Name</label
+              >
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="text-secondary pi font-bold pi-building"></i>
+                </div>
+                <input
+                  [class.!border-red-500]="
+                    registerCompanyForm?.get(`companyName`)?.errors &&
+                    registerCompanyForm?.get(`companyName`)?.touched
+                  "
+                  [class.!border-green-500]="
+                    registerCompanyForm?.get(`companyName`)?.valid &&
+                    registerCompanyForm?.get(`companyName`)?.touched
+                  "
+                  class="block w-full pl-10 pr-3 py-2 border border-secondary-container rounded focus:outline-none outline-none sm:text-sm bg-surface-bright"
+                  id="company_name"
+                  name="company_name"
+                  placeholder="e.g. Acme Corp"
+                  type="text"
+                  formControlName="companyName"
+                />
+              </div>
+            </div>
+            @if (companyNameController?.errors && companyNameController?.touched) {
+              @if (companyNameController?.getError('required')) {
+                <app-error-alert message="Company Name Is Required" />
+              }
+            }
+            <!-- Industry -->
+            <div>
+              <label
+                class="block font-label-md text-label-md text-on-surface-variant mb-stack-sm uppercase"
+                for="industry"
+                >Industry</label
+              >
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="text-secondary pi font-bold pi-briefcase"></i>
+                </div>
+                <select
+                  [class.!border-red-500]="
+                    registerCompanyForm?.get(`industry`)?.errors &&
+                    registerCompanyForm?.get(`industry`)?.touched
+                  "
+                  [class.!border-green-500]="
+                    registerCompanyForm?.get(`industry`)?.valid &&
+                    registerCompanyForm?.get(`industry`)?.touched
+                  "
+                  class="block w-full pl-10 pr-3 py-2 border border-secondary-container rounded focus:outline-none outline-none sm:text-sm bg-surface-bright"
+                  id="industry"
+                  name="industry"
+                  formControlName="industry"
+                >
+                  <option value="" selected hidden>Selcet Industry Type</option>
+                  <option value="marketing">Marketing &amp; Advertising</option>
+                  <option value="technology">Technology &amp; Software</option>
+                  <option value="consulting">Consulting Services</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+            @if (industryController?.errors && industryController?.touched) {
+              @if (industryController?.getError('required')) {
+                <app-error-alert message="Industry Is Required" />
+              }
+            }
+            <div class="border-t border-secondary-container my-stack-md pt-stack-sm">
+              <span
+                class="block font-label-md text-label-md text-secondary uppercase tracking-wider mb-stack-sm"
+                >Admin Details</span
+              >
+            </div>
+            <!-- Admin Name -->
+            <div>
+              <label
+                class="block font-label-md text-label-md text-on-surface-variant mb-stack-sm uppercase"
+                for="admin_name"
+                >Full Name</label
+              >
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="text-secondary pi font-bold pi-user"></i>
+                </div>
+                <input
+                  [class.!border-red-500]="
+                    registerCompanyForm?.get(`adminName`)?.errors &&
+                    registerCompanyForm?.get(`adminName`)?.touched
+                  "
+                  [class.!border-green-500]="
+                    registerCompanyForm?.get(`adminName`)?.valid &&
+                    registerCompanyForm?.get(`adminName`)?.touched
+                  "
+                  class="block w-full pl-10 pr-3 py-2 border border-secondary-container rounded focus:outline-none outline-none sm:text-sm bg-surface-bright"
+                  id="admin_name"
+                  name="admin_name"
+                  placeholder="John Doe"
+                  type="text"
+                  formControlName="adminName"
+                />
+              </div>
+            </div>
+            @if (adminNameController?.errors && adminNameController?.touched) {
+              @if (adminNameController?.getError('required')) {
+                <app-error-alert message="Admin Name Is Required" />
+              }
+            }
+            <!-- Admin Email -->
+            <div>
+              <label
+                class="block font-label-md text-label-md text-on-surface-variant mb-stack-sm uppercase"
+                for="email"
+                >Work Email</label
+              >
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="text-secondary pi font-bold pi-envelope"></i>
+                </div>
+                <input
+                  [class.!border-red-500]="
+                    registerCompanyForm?.get(`adminEmail`)?.errors &&
+                    registerCompanyForm?.get(`adminEmail`)?.touched
+                  "
+                  [class.!border-green-500]="
+                    registerCompanyForm?.get(`adminEmail`)?.valid &&
+                    registerCompanyForm?.get(`adminEmail`)?.touched
+                  "
+                  class="block w-full pl-10 pr-3 py-2 border border-secondary-container rounded focus:outline-none outline-none sm:text-sm bg-surface-bright"
+                  id="email"
+                  name="email"
+                  placeholder="you@company.com"
+                  type="email"
+                  formControlName="adminEmail"
+                />
+              </div>
+            </div>
+            @if (adminEmailController?.errors && adminEmailController?.touched) {
+              @if (adminEmailController?.getError('required')) {
+                <app-error-alert message="Admin Email Is Required" />
+              }
+            }
+            <!-- Password -->
+            <div>
+              <label
+                class="block font-label-md text-label-md text-on-surface-variant mb-stack-sm uppercase"
+                for="password"
+                >Password</label
+              >
+              <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <i class="text-secondary pi font-bold pi-lock"></i>
+                </div>
+                <input
+                  [class.!border-red-500]="
+                    registerCompanyForm?.get(`adminPassword`)?.errors &&
+                    registerCompanyForm?.get(`adminPassword`)?.touched
+                  "
+                  [class.!border-green-500]="
+                    registerCompanyForm?.get(`adminPassword`)?.valid &&
+                    registerCompanyForm?.get(`adminPassword`)?.touched
+                  "
+                  class="block w-full pl-10 pr-3 py-2 border border-secondary-container rounded focus:outline-none outline-none sm:text-sm bg-surface-bright"
+                  id="password"
+                  name="password"
+                  formControlName="adminPassword"
+                  placeholder="••••••••"
+                  type="password"
+                />
+              </div>
+            </div>
+            @if (adminPasswordController?.errors && adminPasswordController?.touched) {
+              @if (adminPasswordController?.getError('required')) {
+                <app-error-alert message="Admin Password Is Required" />
+              }
+            }
+            <!-- Submit Button -->
+            <div class="pt-stack-sm">
+              <button
+                [disabled]="registerCompanyForm.invalid"
+                class="w-full disabled:opacity-50 items-center gap-2 disabled:cursor-not-allowed cursor-pointer flex justify-center py-3 px-4 border border-transparent rounded shadow-soft text-body-md font-body-md font-semibold text-on-primary bg-primary-container hover:bg-surface-tint focus:outline-none outline-none transition-colors duration-200"
+                type="submit"
+              >
+                <span>Create Workspace </span>
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0"
+                  >arrow_forward</span
+                >
+              </button>
+            </div>
+          </form>
+        </div>
+        <!-- Card Footer -->
+        <div
+          class="bg-surface py-4 px-container-padding-desktop border-t border-secondary-container"
+        >
+          <p class="text-center font-body-md text-body-md text-secondary">
+            Already have an account?
+            <a
+              class="font-semibold text-primary-container hover:text-surface-tint transition-colors"
+              routerLink="/login"
+              >Login</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+} @else {
+  <div
+    class="bg-background bg-celebration min-h-screen flex items-center justify-center p-container-padding-mobile md:p-container-padding-desktop"
+  >
+    <main class="w-full max-w-2xl">
+      <!-- Main Card Container -->
+      <div
+        class="glass-card shadow-2xl rounded-3xl overflow-hidden transition-all duration-500 animate-in fade-in zoom-in slide-in-from-bottom-8"
+      >
+        <div class="px-8 pt-12 pb-8 flex flex-col items-center text-center">
+          <!-- Brand Identity -->
+          <div class="mb-8 flex items-center gap-3">
+            <div
+              class="w-10 h-10 bg-[#520B4D] rounded-xl flex items-center justify-center shadow-lg shadow-[#520B4D]/20"
+            >
+              <span class="material-symbols-outlined text-white text-2xl" data-weight="fill"
+                >shield_person</span
+              >
+            </div>
+            <span class="font-display-lg text-headline-lg tracking-tight text-primary"
+              >BrandOS</span
+            >
+          </div>
+          <!-- Animated SVG Success Icon -->
+          <div class="w-32 h-32 mx-auto mb-6">
+            <svg
+              class="success-icon-container w-full h-full"
+              fill="none"
+              height="120"
+              viewbox="0 0 120 120"
+              width="120"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="60"
+                cy="60"
+                fill="rgba(82, 11, 77, 0.05)"
+                r="50"
+                stroke="#520B4D"
+                stroke-linecap="round"
+                stroke-width="4"
+              ></circle>
+              <path
+                class="success-path"
+                d="M40 60L55 75L80 45"
+                stroke="#520B4D"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="6"
+              ></path>
+            </svg>
+          </div>
+          <h1 class="font-headline-lg text-headline-lg text-on-background mb-4">
+            Workspace Initialized Successfully!
+          </h1>
+          <p class="font-body-md text-body-md text-secondary max-w-md">
+            Your agency and admin account are ready. Please save your login credentials below; for
+            security, they will not be shown again.
+          </p>
+        </div>
+        <!-- Credentials Secure Card -->
+        <div class="px-8 pb-12">
+          <div
+            class="bg-surface-container-lowest border border-gray-200 rounded-2xl p-6 relative group credential-field shadow-sm"
+          >
+            <div
+              class="absolute top-4 right-4 bg-[#520B4D]/10 text-[#520B4D] text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1 uppercase tracking-wider"
+            >
+              <i class="w-3 h-3 pi pi-lock"></i> <span>SECURE DATA</span>
+            </div>
+            <div class="space-y-6">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    class="font-label-md text-label-md text-secondary block mb-1 uppercase tracking-wider"
+                    >Company Name</label
+                  >
+                  <p class="font-title-md text-title-md text-on-background" id="companyName">
+                    {{ companyNameController?.value }}
+                  </p>
+                </div>
+                <div>
+                  <label
+                    class="font-label-md text-label-md text-secondary block mb-1 uppercase tracking-wider"
+                    >Industry</label
+                  >
+                  <p class="font-body-lg text-body-lg text-on-background">
+                    {{ industryController?.value }}
+                  </p>
+                </div>
+              </div>
+              <div class="h-px bg-gray-100 w-full"></div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label
+                    class="font-label-md text-label-md text-secondary block mb-1 uppercase tracking-wider"
+                    >Admin Email</label
+                  >
+                  <div class="flex items-center gap-2">
+                    <i class="w-4 h-4 text-secondary pi font-bold pi-envelope"></i>
+                    <p
+                      class="font-body-lg text-body-lg text-on-background font-medium"
+                      id="adminEmail"
+                    >
+                      {{ adminEmailController?.value }}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <label
+                    class="font-label-md text-label-md text-secondary block mb-1 uppercase tracking-wider"
+                    >Temporary Password</label
+                  >
+                  <div class="flex items-center gap-2">
+                    <i class="w-4 h-4 text-secondary pi font-bold pi-key"></i>
+                    <p
+                      class="font-title-md text-title-md text-on-background font-mono tracking-wider"
+                      id="tempPassword"
+                    >
+                      {{ adminPasswordController?.value }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Action Buttons -->
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <button
+              (click)="copyClipboard()"
+              class="group cursor-pointer flex items-center justify-center gap-2 bg-secondary-container outline-none text-on-secondary-fixed-variant px-6 py-4 rounded-xl font-label-md text-body-md transition-all hover:bg-secondary-fixed-dim hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <i class="w-5 h-5 group-hover:rotate-6 transition-transform" data-lucide="copy"></i>
+              Copy Credentials
+            </button>
+            <button
+              routerLink="/login"
+              class="flex items-center cursor-pointer justify-center gap-2 bg-[#520B4D] text-white px-6 py-4 rounded-xl font-label-md text-body-md transition-all hover:bg-[#3d0839] hover:shadow-lg hover:shadow-[#520B4D]/20 hover:scale-[1.02] active:scale-[0.98]"
+            >
+              Proceed to Login
+              <i class="w-5 h-5" class="pi pi-arrow-right"></i>
+            </button>
+          </div>
+          <!-- Security Note -->
+          <div
+            class="mt-8 flex items-start gap-3 p-4 bg-error-container/10 rounded-xl border border-[#520B4D]/10"
+          >
+            <i class="w-5 h-5 text-[#520B4D] mt-0.5" data-lucide="info"></i>
+            <p class="font-body-md text-body-md text-on-background/80 leading-snug">
+              A copy of these credentials has been sent to
+              <span class="font-bold text-[#520B4D]">{{ adminEmailController?.value }}</span
+              >. Please change your password upon your first login to ensure account security.
+            </p>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+}

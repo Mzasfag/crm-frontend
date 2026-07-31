@@ -1,0 +1,247 @@
+@import 'tailwindcss';
+@theme {
+  /* Colors */
+  --color-surface-container: #e7eefe;
+  --color-on-secondary: #ffffff;
+  --color-surface-variant: #dce2f3;
+  --color-on-tertiary-fixed-variant: #2f2ebe;
+  --color-on-error-container: #93000a;
+  --color-secondary-container: #e1e3e4;
+  --color-surface-dim: #d3daea;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-bright: #f9f9ff;
+  --color-primary-fixed-dim: #ffabee;
+  --color-outline-variant: #d4c1cd;
+  --color-tertiary-fixed-dim: #c0c1ff;
+  --color-on-secondary-fixed: #191c1d;
+  --color-on-primary-fixed: #390036;
+  --color-primary-fixed: #ffd7f3;
+  --color-tertiary: #050062;
+  --color-on-tertiary-fixed: #07006c;
+  --color-on-surface-variant: #50434c;
+  --color-on-error: #ffffff;
+  --color-on-primary-container: #ca77bc;
+  --color-error-container: #ffdad6;
+  --color-tertiary-container: #0e009e;
+  --color-surface-container-low: #f0f3ff;
+  --color-on-surface: #151c27;
+  --color-on-background: #151c27;
+  --color-surface: #f9f9ff;
+  --color-secondary-fixed-dim: #c5c7c8;
+  --color-secondary: #5c5f60;
+  --color-on-tertiary-container: #8487ff;
+  --color-surface-container-high: #e2e8f8;
+  --color-on-secondary-container: #626566;
+  --color-on-primary: #ffffff;
+  --color-on-tertiary: #ffffff;
+  --color-outline: #82737d;
+  --color-inverse-on-surface: #ebf1ff;
+  --color-on-secondary-fixed-variant: #454748;
+  --color-inverse-surface: #2a313d;
+  --color-tertiary-fixed: #e1e0ff;
+  --color-on-primary-fixed-variant: #722a69;
+  --color-surface-tint: #8d4283;
+  --color-primary-container: #520b4d;
+  --color-background: #f9f9ff;
+  --color-secondary-fixed: #e1e3e4;
+  --color-inverse-primary: #ffabee;
+  --color-error: #ba1a1a;
+  --color-surface-container-highest: #dce2f3;
+  --color-primary: #330030;
+
+  /* Border Radius */
+  --radius-default: 0.25rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-stack-sm: 8px;
+  --spacing-base: 4px;
+  --spacing-gutter: 24px;
+  --spacing-stack-lg: 24px;
+  --spacing-stack-md: 16px;
+  --spacing-container-padding-mobile: 16px;
+  --spacing-container-padding-desktop: 32px;
+
+  /* Font Family */
+  --font-body-lg: 'Cairo', sans-serif;
+  --font-body-md: 'Cairo', sans-serif;
+  --font-display-lg: 'Cairo', sans-serif;
+  --font-title-md: 'Cairo', sans-serif;
+  --font-headline-lg-mobile: 'Cairo', sans-serif;
+  --font-headline-lg: 'Cairo', sans-serif;
+  --font-label-md: 'Cairo', sans-serif;
+
+  /* Font Sizes */
+  --text-body-lg: 16px;
+  --text-body-lg--line-height: 1.6;
+  --text-body-lg--font-weight: 400;
+
+  --text-body-md: 14px;
+  --text-body-md--line-height: 1.5;
+  --text-body-md--font-weight: 400;
+
+  --text-display-lg: 48px;
+  --text-display-lg--line-height: 1.1;
+  --text-display-lg--letter-spacing: -0.02em;
+  --text-display-lg--font-weight: 700;
+
+  --text-title-md: 20px;
+  --text-title-md--line-height: 1.4;
+  --text-title-md--font-weight: 600;
+
+  --text-headline-lg-mobile: 24px;
+  --text-headline-lg-mobile--line-height: 1.2;
+  --text-headline-lg-mobile--font-weight: 600;
+
+  --text-headline-lg: 32px;
+  --text-headline-lg--line-height: 1.2;
+  --text-headline-lg--letter-spacing: -0.01em;
+  --text-headline-lg--font-weight: 600;
+
+  --text-label-md: 12px;
+  --text-label-md--line-height: 1;
+  --text-label-md--letter-spacing: 0.05em;
+  --text-label-md--font-weight: 500;
+}
+
+div.p-toast-detail {
+  color: var(--color-primary-container) !important;
+}
+
+body {
+  background-color: var(--color-background) !important;
+  font-family: 'Cairo', sans-serif !important;
+}
+
+::selection {
+  background-color: var(--color-primary) !important;
+  color: white !important;
+}
+
+/* تخصيص الـ Scrollbar للموقع كله */
+* {
+  /* لمتصفحات Firefox */
+  scrollbar-width: thin;
+  scrollbar-width: auto;
+  scrollbar-color: #520b4d #f1f1f1;
+}
+
+/* لمتصفحات Chrome, Edge, Safari */
+*::-webkit-scrollbar {
+  width: 5px; /* عرض الـ Scrollbar الرأسي */
+  height: 5px; /* ارتفاع الـ Scrollbar الأفقي */
+}
+
+/* خلفية مسار الـ Scrollbar */
+*::-webkit-scrollbar-track {
+  background: #f8fafc; /* لون خلفية هادئ (gray-50) */
+  border-radius: 5px;
+}
+
+/* الجزء المتحرك (المقبض) */
+*::-webkit-scrollbar-thumb {
+  background: #520b4d; /* لون البراند بتاعك */
+  border-radius: 8px;
+  border: 2px solid #f8fafc; /* مسافة وهمية تدي شكل أنعم */
+}
+
+/* لما تقف عليه بالماوس */
+*::-webkit-scrollbar-thumb:hover {
+  background: #3b0537; /* لون أغمق سنة وقت الـ Hover */
+}
+
+div.p-component.p-confirmdialog.p-dialog {
+  background-color: var(--color-background) !important;
+  color: var(--color-primary-container) !important;
+  border: none !important;
+}
+
+span.p-confirmdialog-message {
+  color: var(--color-primary-container) !important;
+}
+
+i.p-confirmdialog-icon.pi.pi-info-circle {
+  color: var(--color-primary-container) !important;
+}
+
+button.p-ripple.p-dialog-close-button.p-button.p-button-icon-only.p-button-rounded.p-button-secondary.p-button-text.p-component {
+  color: var(--color-primary-container) !important;
+}
+
+button.p-ripple.p-dialog-close-button.p-button.p-button-icon-only.p-button-rounded.p-button-secondary.p-button-text.p-component:hover {
+  color: white !important;
+  background-color: var(--color-primary-container) !important;
+}
+
+/* زرار التأكيد الأساسي (Accept) */
+button.p-confirmdialog-accept.p-button {
+  background-color: var(--color-primary-container) !important;
+  color: var(--color-on-primary) !important;
+  border: 1px solid var(--color-primary-container) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+}
+
+button.p-confirmdialog-accept.p-button:hover {
+  background-color: var(--color-surface-tint) !important;
+  border-color: var(--color-surface-tint) !important;
+}
+
+/* زرار الإلغاء أو الرفض (Reject / Outlined) */
+button.p-confirmdialog-reject.p-button {
+  background-color: transparent !important;
+  color: var(--color-primary-container) !important;
+  border: 1px solid var(--color-primary-container) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+}
+
+button.p-confirmdialog-reject.p-button:hover {
+  background-color: var(--color-primary-container) !important;
+  color: var(--color-on-primary) !important;
+}
+
+/* زرار التأكيد (Accept) */
+button.p-ripple.p-confirmdialog-accept-button.p-button.p-component {
+  background-color: var(--color-primary-container) !important;
+  color: var(--color-on-primary) !important;
+  border: 1px solid var(--color-primary-container) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+}
+
+button.p-ripple.p-confirmdialog-accept-button.p-button.p-component:hover {
+  background-color: var(--color-surface-tint) !important;
+  border-color: var(--color-surface-tint) !important;
+}
+
+/* زرار الإلغاء (Reject / Text button) */
+button.p-ripple.p-button-text.p-confirmdialog-reject-button.p-button.p-component {
+  background-color: transparent !important;
+  color: var(--color-primary-container) !important;
+  border: 1px solid var(--color-primary-container) !important;
+  border-radius: var(--radius-full, 9999px) !important;
+}
+
+button.p-ripple.p-button-text.p-confirmdialog-reject-button.p-button.p-component:hover {
+  background-color: var(--color-primary-container) !important;
+  color: var(--color-on-primary) !important;
+}
+
+.material-symbols-outlined {
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+.icon-fill-1 {
+  font-variation-settings:
+    'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+/* Custom styles for the toggle switch to match BrandOS primary color */
+.peer:checked ~ .peer-checked\:bg-primary-container {
+  background-color: #520b4d;
+}

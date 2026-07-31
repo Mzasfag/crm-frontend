@@ -1,0 +1,410 @@
+@if (selectedDealUpdate() == null) {
+  <div class="bg-background min-h-screen text-on-background font-body-md antialiased relative">
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4"
+    >
+      <!-- Modal Card -->
+      <form
+        (submit)="onAddDeal()"
+        [formGroup]="dealForm"
+        class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-lg border border-secondary-container overflow-hidden flex flex-col transform transition-all"
+      >
+        <!-- Header -->
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-secondary-container"
+        >
+          <div class="flex items-center gap-3">
+            <h2 class="font-title-md text-title-md text-on-surface">Create New Deal</h2>
+          </div>
+          <button
+            (click)="closeDealForm()"
+            class="text-secondary hover:text-primary transition-colors p-1 rounded-full focus:outline-none cursor-pointer"
+            type="button"
+          >
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0"
+              >close</span
+            >
+          </button>
+        </div>
+        <!-- Form Body -->
+        <div class="p-6 flex flex-col gap-5 overflow-y-auto max-h-[70vh]">
+          <!-- Title Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealTitle"
+              >Deal Title</label
+            >
+            <!-- px-3 py-2 -->
+            <input
+              [class.!border-red-500]="
+                dealForm?.get(`title`)?.errors && dealForm?.get(`title`)?.touched
+              "
+              [class.!border-green-500]="
+                dealForm?.get(`title`)?.valid && dealForm?.get(`title`)?.touched
+              "
+              class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+              id="dealTitle"
+              formControlName="title"
+              placeholder="e.g., Website Redesign Campaign"
+              type="text"
+            />
+          </div>
+          @if (titleController?.errors && titleController?.touched) {
+            @if (titleController?.getError('required')) {
+              <app-error-alert message="Deal Title Is Required" />
+            }
+          }
+          <!-- Value Field (Showing Error State) -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealValue"
+              >Estimated Value (EGP)</label
+            >
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary">
+                <span
+                  class="material-symbols-outlined text-sm"
+                  style="font-variation-settings: 'FILL' 0"
+                  >payments</span
+                >
+              </span>
+              <input
+                [class.!border-red-500]="
+                  dealForm?.get(`value`)?.errors && dealForm?.get(`value`)?.touched
+                "
+                [class.!border-green-500]="
+                  dealForm?.get(`value`)?.valid && dealForm?.get(`value`)?.touched
+                "
+                class="w-full pl-9 px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                id="dealValue"
+                formControlName="value"
+                placeholder="e.g., 50000"
+                type="number"
+              />
+            </div>
+            @if (valueController?.errors && valueController?.touched) {
+              @if (valueController?.getError('required')) {
+                <app-error-alert message="Value Is Required" />
+              }
+
+              @if (valueController?.getError('min')) {
+                <app-error-alert message="Value Must Be Greater Than 0" />
+              }
+            }
+          </div>
+          <!-- Customer Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealCustomer"
+              >Client / Customer</label
+            >
+            <div class="relative">
+              <select
+                [class.!border-red-500]="
+                  dealForm?.get(`customerId`)?.errors && dealForm?.get(`customerId`)?.touched
+                "
+                [class.!border-green-500]="
+                  dealForm?.get(`customerId`)?.valid && dealForm?.get(`customerId`)?.touched
+                "
+                class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                id="dealCustomer"
+                formControlName="customerId"
+              >
+                <option value="" disabled selected>Select Customer</option>
+
+                @for (customer of customersList(); track $index) {
+                  <option [value]="customer?._id">{{ customer?.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          @if (customerIdController?.errors && customerIdController?.touched) {
+            @if (customerIdController?.getError('required')) {
+              <app-error-alert message="Customer Id Is Required" />
+            }
+          }
+          <!-- Assigned To Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealAssignee"
+              >Team Member</label
+            >
+            <div class="relative">
+              <select
+                [class.!border-red-500]="
+                  dealForm?.get(`assignedTo`)?.errors && dealForm?.get(`assignedTo`)?.touched
+                "
+                [class.!border-green-500]="
+                  dealForm?.get(`assignedTo`)?.valid && dealForm?.get(`assignedTo`)?.touched
+                "
+                class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                id="dealAssignee"
+                formControlName="assignedTo"
+              >
+                <option value="" disabled selected>Assigned To User</option>
+                @for (user of usersList(); track $index) {
+                  <option [value]="user?._id">{{ user?.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          @if (assignedToController?.errors && assignedToController?.touched) {
+            @if (assignedToController?.getError('required')) {
+              <app-error-alert message="Assigned To Is Required" />
+            }
+          }
+        </div>
+        <!-- Footer / Actions -->
+        <div
+          class="px-6 py-4 bg-surface-container-low border-t border-secondary-container flex justify-end gap-3 rounded-b-2xl"
+        >
+          <button
+            (click)="closeDealForm()"
+            class="px-4 py-2 bg-surface-container-lowest border font-bold border-secondary-container text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-container-high transition-colors focus:outline-none cursor-pointer shadow-sm"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            [disabled]="dealForm.invalid"
+            type="submit"
+            class="px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed bg-primary-container font-bold text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary transition-colors focus:outline-none cursor-pointer shadow-sm flex items-center gap-2"
+          >
+            <span
+              class="material-symbols-outlined text-sm"
+              style="font-variation-settings: 'FILL' 1"
+              >save</span
+            >
+            Save Deal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+} @else {
+  <div class="bg-background min-h-screen text-on-background font-body-md antialiased relative">
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-inverse-surface/40 backdrop-blur-sm p-4"
+    >
+      <!-- Modal Card -->
+      <form
+        (submit)="onUpdateDeal()"
+        [formGroup]="updateDealForm"
+        class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-lg border border-secondary-container overflow-hidden flex flex-col transform transition-all"
+      >
+        <!-- Header -->
+        <div
+          class="flex items-center justify-between px-6 py-4 border-b border-secondary-container"
+        >
+          <div class="flex items-center gap-3">
+            <h2 class="font-title-md text-title-md text-on-surface">Update Deal</h2>
+          </div>
+          <button
+            (click)="closeDealForm()"
+            class="text-secondary hover:text-primary transition-colors p-1 rounded-full focus:outline-none cursor-pointer"
+            type="button"
+          >
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0"
+              >close</span
+            >
+          </button>
+        </div>
+        <!-- Form Body -->
+        <div class="p-6 flex flex-col gap-5 overflow-y-auto max-h-[70vh]">
+          <!-- Title Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealTitle"
+              >Deal Title</label
+            >
+            <!-- px-3 py-2 -->
+            <input
+              [class.!border-red-500]="
+                dealForm?.get(`title`)?.errors && dealForm?.get(`title`)?.touched
+              "
+              [class.!border-green-500]="
+                dealForm?.get(`title`)?.valid && dealForm?.get(`title`)?.touched
+              "
+              class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+              id="dealTitle"
+              formControlName="title"
+              placeholder="e.g., Website Redesign Campaign"
+              type="text"
+            />
+          </div>
+          @if (titleController?.errors && titleController?.touched) {
+            @if (titleController?.getError('required')) {
+              <app-error-alert message="Deal Title Is Required" />
+            }
+          }
+          <!-- Value Field (Showing Error State) -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealValue"
+              >Estimated Value (EGP)</label
+            >
+            <div class="relative">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-secondary">
+                <span
+                  class="material-symbols-outlined text-sm"
+                  style="font-variation-settings: 'FILL' 0"
+                  >payments</span
+                >
+              </span>
+              <input
+                [class.!border-red-500]="
+                  dealForm?.get(`value`)?.errors && dealForm?.get(`value`)?.touched
+                "
+                [class.!border-green-500]="
+                  dealForm?.get(`value`)?.valid && dealForm?.get(`value`)?.touched
+                "
+                class="w-full pl-9 px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                id="dealValue"
+                formControlName="value"
+                placeholder="e.g., 50000"
+                type="number"
+              />
+            </div>
+            @if (valueController?.errors && valueController?.touched) {
+              @if (valueController?.getError('required')) {
+                <app-error-alert message="Value Is Required" />
+              }
+
+              @if (valueController?.getError('min')) {
+                <app-error-alert message="Value Must Be Greater Than 0" />
+              }
+            }
+          </div>
+          <!-- Customer Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealCustomer"
+              >Client / Customer</label
+            >
+            <div class="relative">
+              <select
+                [class.!border-red-500]="
+                  dealForm?.get(`customerId`)?.errors && dealForm?.get(`customerId`)?.touched
+                "
+                [class.!border-green-500]="
+                  dealForm?.get(`customerId`)?.valid && dealForm?.get(`customerId`)?.touched
+                "
+                class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                id="dealCustomer"
+                formControlName="customerId"
+              >
+                <option value="" disabled selected>Select Customer</option>
+
+                @for (customer of customersList(); track $index) {
+                  <option [value]="customer?._id">{{ customer?.name }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
+          @if (customerIdController?.errors && customerIdController?.touched) {
+            @if (customerIdController?.getError('required')) {
+              <app-error-alert message="Customer Id Is Required" />
+            }
+          }
+          @if ( (authService?.userData()?.role?.toLowerCase() == 'admin' ||authService?.userData()?.role?.toLowerCase() == 'manager' || authService?.userData()?.role?.toLowerCase() == 'sales' )) {
+            <!-- Assigned To Field -->
+            <div class="flex flex-col gap-2">
+              <label
+                class="font-label-md text-label-md text-on-surface-variant font-semibold"
+                for="dealAssignee"
+                >Team Member</label
+              >
+              <div class="relative">
+                <select
+                  [class.!border-red-500]="
+                    dealForm?.get(`assignedTo`)?.errors && dealForm?.get(`assignedTo`)?.touched
+                  "
+                  [class.!border-green-500]="
+                    dealForm?.get(`assignedTo`)?.valid && dealForm?.get(`assignedTo`)?.touched
+                  "
+                  class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                  id="dealAssignee"
+                  formControlName="assignedTo"
+                >
+                  <option value="" disabled selected>Assigned To User</option>
+                  @for (user of usersList(); track $index) {
+                    <option [value]="user?._id">{{ user?.name }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+          }
+          @if (assignedToController?.errors && assignedToController?.touched) {
+            @if (assignedToController?.getError('required')) {
+              <app-error-alert message="Assigned To Is Required" />
+            }
+          }
+          <!-- Assigned To Field -->
+          <div class="flex flex-col gap-2">
+            <label
+              class="font-label-md text-label-md text-on-surface-variant font-semibold"
+              for="dealAssignee"
+              >Deal Stage</label
+            >
+            <div class="relative">
+              <select
+                [class.!border-red-500]="
+                  dealForm?.get(`stage`)?.errors && dealForm?.get(`stage`)?.touched
+                "
+                [class.!border-green-500]="
+                  dealForm?.get(`stage`)?.valid && dealForm?.get(`stage`)?.touched
+                "
+                class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
+                id="dealAssignee"
+                formControlName="stage"
+              >
+                <option value="" disabled selected>Select Stage</option>
+                @for (stage of ['Lead', 'Won', 'Lost', 'Proposal', 'Negotiation']; track $index) {
+                  <option [value]="stage">{{ stage }}</option>
+                }
+              </select>
+            </div>
+          </div>
+          @if (stageController?.errors && stageController?.touched) {
+            @if (stageController?.getError('required')) {
+              <app-error-alert message="Assigned To Is Required" />
+            }
+          }
+        </div>
+        <!-- Footer / Actions -->
+        <div
+          class="px-6 py-4 bg-surface-container-low border-t border-secondary-container flex justify-end gap-3 rounded-b-2xl"
+        >
+          <button
+            (click)="closeDealForm()"
+            class="px-4 py-2 bg-surface-container-lowest border font-bold border-secondary-container text-on-surface rounded-lg font-label-md text-label-md hover:bg-surface-container-high transition-colors focus:outline-none cursor-pointer shadow-sm"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            [disabled]="updateDealForm.invalid"
+            type="submit"
+            class="px-4 py-2 disabled:opacity-50 disabled:cursor-not-allowed bg-primary-container font-bold text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary transition-colors focus:outline-none cursor-pointer shadow-sm flex items-center gap-2"
+          >
+            <span
+              class="material-symbols-outlined text-sm"
+              style="font-variation-settings: 'FILL' 1"
+              >update</span
+            >
+            Upate Deal
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

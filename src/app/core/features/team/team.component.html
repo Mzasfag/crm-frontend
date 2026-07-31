@@ -1,0 +1,447 @@
+<!-- Page Content -->
+<div
+  class="p-container-padding-mobile md:p-container-padding-desktop flex-1 overflow-y-auto space-y-stack-lg bg-background text-on-background min-h-screen"
+>
+  <!-- Page Header -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-stack-md">
+    <div>
+      <h2
+        class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface"
+      >
+        Users Management
+      </h2>
+      <p class="font-body-md text-body-md text-on-surface-variant mt-1">
+        Manage your agency team members, permissions, and system roles seamlessly.
+      </p>
+    </div>
+    <button
+      (click)="toggleUserForm()"
+      class="bg-primary-container cursor-pointer text-on-primary font-body-md text-body-md font-medium px-4 py-2.5 rounded-lg hover:bg-surface-tint transition-colors shadow-sm flex items-center gap-2"
+    >
+      <span>New User</span>
+      <span class="material-symbols-outlined text-[20px]">person_add</span>
+    </button>
+  </div>
+
+  <!-- Bento Grid Stats (Derived from Users & Dashboard Data) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+    <!-- Total Users -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3
+          class="font-label-md text-label-md text-on-tertiary-fixed-variant uppercase tracking-wider"
+        >
+          Total Users
+        </h3>
+        <div class="p-2 rounded-lg bg-surface-container-low text-on-tertiary-fixed-variant">
+          <span class="material-symbols-outlined text-[20px]">group</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">
+        {{ userList()?.length || 5 }}
+      </p>
+    </div>
+
+    <!-- Admin Count -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3
+          class="font-label-md text-label-md text-on-secondary-container uppercase tracking-wider"
+        >
+          Admins & Managers
+        </h3>
+        <div class="p-2 rounded-lg bg-secondary-container text-on-secondary-container">
+          <span class="material-symbols-outlined text-[20px]">admin_panel_settings</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">2</p>
+    </div>
+
+    <!-- Sales Reps -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md text-emerald-700 uppercase tracking-wider">
+          Sales Team
+        </h3>
+        <div class="p-2 rounded-lg bg-emerald-50 text-emerald-700">
+          <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">1</p>
+    </div>
+
+    <!-- Creative & Production -->
+    <div
+      class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl p-stack-lg shadow-xs hover:shadow-md transition-shadow"
+    >
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-label-md text-label-md text-primary uppercase tracking-wider">
+          Designers & Creators
+        </h3>
+        <div class="p-2 rounded-lg bg-primary-fixed text-on-primary-fixed">
+          <span class="material-symbols-outlined text-[20px]">palette</span>
+        </div>
+      </div>
+      <p class="font-display-lg text-display-lg text-on-surface">2</p>
+    </div>
+  </div>
+
+  <!-- Data Table Card -->
+  <div
+    class="bg-surface-container-lowest border border-outline-variant/40 rounded-xl shadow-xs overflow-hidden"
+  >
+    <!-- Table Header & Filters -->
+    <div
+      class="flex flex-col lg:flex-row justify-between items-stretch lg:items-center p-stack-md border-b border-surface-container-high bg-surface-bright gap-stack-md"
+    >
+      <h3 class="font-title-md text-title-md text-on-surface">Users Directory</h3>
+
+      <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto items-stretch sm:items-center">
+        <!-- Search Input -->
+        <div class="relative w-full sm:w-72">
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]"
+            >search</span
+          >
+          <input
+            [(ngModel)]="searchUserTerm"
+            class="w-full pl-10 pr-4 py-2 rounded-lg border border-outline-variant bg-surface outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-body-md text-body-md text-on-surface placeholder:text-outline"
+            placeholder="Search users..."
+            type="text"
+          />
+        </div>
+
+        <!-- Role Filter -->
+        <select
+          [(ngModel)]="roleTerm"
+          class="bg-surface border border-outline-variant rounded-lg px-3 py-2 font-body-md text-body-md text-on-surface focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none"
+        >
+          <option selected value="">All Roles</option>
+          <option value="Admin">Admin</option>
+          <option value="Manager">Manager</option>
+          <option value="Sales">Sales</option>
+          <option value="Designer">Designer</option>
+          <option value="ContentCreator">Content Creator</option>
+          <option value="Developer">Developer</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table Body -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse min-w-[950px]">
+        <thead>
+          <tr
+            class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider border-b border-surface-container-high"
+          >
+            <th class="py-stack-md px-stack-lg font-medium">User & Email</th>
+            <th class="py-stack-md px-stack-lg font-medium">Role</th>
+            <th class="py-stack-md px-stack-lg font-medium">Tenant ID</th>
+            <th class="py-stack-md px-stack-lg font-medium">Created At</th>
+            @if (authService?.userData()?.role?.toLowerCase() == 'admin') {
+              <th class="py-stack-md px-stack-lg font-medium text-right">Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody
+          class="font-body-md text-body-md text-on-surface divide-y divide-surface-container-high/60"
+        >
+          @if (searchUserTerm.length !== 0 || roleTerm.length !== 0) {
+            @for (user of userList()! | searchOnUser: searchUserTerm : roleTerm; track user._id) {
+              <tr class="hover:bg-surface-bright transition-colors group">
+                <!-- User & Email -->
+                <td class="py-stack-md px-stack-lg">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-container text-on-primary font-bold"
+                    >
+                      {{ user.name.charAt(0) }}
+                    </div>
+                    <div>
+                      <div class="font-medium text-on-surface text-base">
+                        {{ user.name }}
+                      </div>
+                      <div class="text-on-surface-variant text-sm mt-0.5">
+                        {{ user.email }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Role Badge -->
+                <td class="py-stack-md px-stack-lg">
+                  <span
+                    [ngClass]="{
+                      'bg-error-container text-on-error-container': user.role === 'Admin',
+                      'bg-primary-container/20 text-primary': user.role === 'Manager',
+                      'bg-tertiary-container text-white': user.role === 'Sales',
+                      'bg-surface-container-highest text-on-surface-variant':
+                        user.role === 'Designer' ||
+                        user.role === 'ContentCreator' ||
+                        user.role === 'Developer',
+                    }"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  >
+                    {{ user.role }}
+                  </span>
+                </td>
+
+                <!-- Tenant ID -->
+                <td class="py-stack-md px-stack-lg text-on-surface-variant text-sm font-mono">
+                  {{ user.tenantId }}
+                </td>
+
+                <!-- Created At -->
+                <td class="py-stack-md px-stack-lg text-on-surface-variant text-sm">
+                  {{ user.createdAt | date: 'shortDate' }}
+                </td>
+
+                @if (authService?.userData()?.role?.toLowerCase() == 'admin') {
+                  <!-- Actions Menu -->
+                  <td class="py-stack-md px-stack-lg text-right relative">
+                    <button
+                      (click)="toggleDropDown(user?._id)"
+                      class="text-outline hover:text-primary transition-colors p-1.5 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                    </button>
+
+                    <!-- Dropdown -->
+                    @if (isDropdownOpen(user?._id)) {
+                      <div
+                        class="absolute right-4 top-12 w-36 bg-surface-container-lowest rounded-xl shadow-xl border border-surface-container-high py-1.5 z-50 transform opacity-100 scale-100 transition-all"
+                      >
+                        <!-- Update Button -->
+                        <button
+                          (click)="setToUpdate(user)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-on-surface hover:bg-primary-container/10 hover:text-primary-container transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path
+                              d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                            ></path>
+                            <path
+                              d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Update</span>
+                        </button>
+
+                        <!-- Delete Button -->
+                        <button
+                          (click)="onDeleteUser(user?._id)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-error hover:bg-error-container/20 transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Delete</span>
+                        </button>
+                      </div>
+                    }
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td class="p-6 text-center text-error font-medium" colspan="5">
+                  No Users Available
+                </td>
+              </tr>
+            }
+          } @else {
+            @for (user of userList()?.slice(...nevigateArr()); track user._id) {
+              <tr class="hover:bg-surface-bright transition-colors group">
+                <!-- User & Email -->
+                <td class="py-stack-md px-stack-lg">
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary-container text-on-primary font-bold"
+                    >
+                      {{ user.name.charAt(0) }}
+                    </div>
+                    <div>
+                      <div class="font-medium text-on-surface text-base">
+                        {{ user.name }}
+                      </div>
+                      <div class="text-on-surface-variant text-sm mt-0.5">
+                        {{ user.email }}
+                      </div>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Role Badge -->
+                <td class="py-stack-md px-stack-lg">
+                  <span
+                    [ngClass]="{
+                      'bg-error-container text-on-error-container': user.role === 'Admin',
+                      'bg-primary-container/20 text-primary': user.role === 'Manager',
+                      'bg-tertiary-container text-white': user.role === 'Sales',
+                      'bg-surface-container-highest text-on-surface-variant':
+                        user.role === 'Designer' ||
+                        user.role === 'ContentCreator' ||
+                        user.role === 'Developer',
+                    }"
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                  >
+                    {{ user.role }}
+                  </span>
+                </td>
+
+                <!-- Tenant ID -->
+                <td class="py-stack-md px-stack-lg text-on-surface-variant text-sm font-mono">
+                  {{ user.tenantId }}
+                </td>
+
+                <!-- Created At -->
+                <td class="py-stack-md px-stack-lg text-on-surface-variant text-sm">
+                  {{ user.createdAt | date: 'shortDate' }}
+                </td>
+
+                @if (authService?.userData()?.role?.toLowerCase() == 'admin') {
+                  <!-- Actions Menu -->
+                  <td class="py-stack-md px-stack-lg text-right relative">
+                    <button
+                      (click)="toggleDropDown(user?._id)"
+                      class="text-outline hover:text-primary transition-colors p-1.5 rounded-lg hover:bg-surface-container opacity-0 group-hover:opacity-100 focus:opacity-100 cursor-pointer"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">more_vert</span>
+                    </button>
+
+                    <!-- Dropdown -->
+                    @if (isDropdownOpen(user?._id)) {
+                      <div
+                        class="absolute right-4 top-12 w-36 bg-surface-container-lowest rounded-xl shadow-xl border border-surface-container-high py-1.5 z-50 transform opacity-100 scale-100 transition-all"
+                      >
+                        <!-- Update Button -->
+                        <button
+                          (click)="setToUpdate(user)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-on-surface hover:bg-primary-container/10 hover:text-primary-container transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <path
+                              d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+                            ></path>
+                            <path
+                              d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Update</span>
+                        </button>
+
+                        <!-- Delete Button -->
+                        <button
+                          (click)="onDeleteUser(user?._id)"
+                          class="w-full flex cursor-pointer items-center space-x-2 px-4 py-2 text-sm text-error hover:bg-error-container/20 transition-colors"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="w-4 h-4"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path
+                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                            ></path>
+                          </svg>
+                          <span class="font-medium">Delete</span>
+                        </button>
+                      </div>
+                    }
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td class="p-6 text-center text-error font-medium" colspan="5">
+                  No Users Available
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+    @if (roleTerm.length !== 0 || searchUserTerm.length !== 0) {
+    } @else {
+      <div
+        class="p-4 border-t border-surface-container-high bg-surface-bright flex justify-between items-center text-on-surface-variant font-body-md text-body-md"
+      >
+        <p>
+          Showing {{ nevigateArr()[0] + 1 }} to
+          {{
+            nevigateArr()[1] >= userListCloned()?.length!
+              ? userListCloned()?.length!
+              : nevigateArr()[1]
+          }}
+          of {{ userListCloned()?.length || 0 }} entries
+        </p>
+        <div class="flex gap-2">
+          <button
+            (click)="prevNeviagete()"
+            [disabled]="stopPrev()"
+            class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            Prev
+          </button>
+          <button
+            (click)="nextNeviagete()"
+            [disabled]="stopNext()"
+            class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface hover:bg-surface-container-low disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+</div>
+
+<p-confirm-dialog key="positionDialog" rejectButtonStyleClass="p-button-outlined" />
+<p-toast />
+
+@if (userFormIsOpen() == true) {
+  <app-user-model (handleuserformIsOpen)="handleUserForm($event)" />
+}
