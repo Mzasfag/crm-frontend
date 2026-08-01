@@ -1,7 +1,7 @@
 import { Component, effect, inject, OnInit, signal } from '@angular/core';
 import { DashboardStatusService } from '../../services/dashboard-status.service';
 import { IDashboardStatus } from '../../models/dashboard-status.model';
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AddDealFormComponent } from '../../../shared/components/add-deal-form/add-deal-form.component';
 import { SettingsService } from '../../services/settings.service';
@@ -9,7 +9,7 @@ import { ChartModule } from 'primeng/chart';
 import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-dashboard',
-  imports: [DatePipe, RouterLink, AddDealFormComponent, ChartModule],
+  imports: [DatePipe, RouterLink, AddDealFormComponent, ChartModule, NgClass],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.css',
 })

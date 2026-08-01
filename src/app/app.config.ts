@@ -14,7 +14,7 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideBrowserGlobalErrorListeners(),
     CookieService,
-    provideRouter(routes,withHashLocation()),
+    provideRouter(routes),
     provideClientHydration(),
     provideHttpClient(withInterceptors([loaderInterceptor,handleToken])),
     MessageService,

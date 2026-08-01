@@ -5,7 +5,7 @@ import { IMainResposne } from '../models/main-response.model';
 import { ILoginResponse } from '../models/login-response.model';
 import { IMyCustomUser, IUser } from '../models/user.model';
 import { CookieService } from 'ngx-cookie-service';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.development';
 
 @Service()
 export class AuthService {
