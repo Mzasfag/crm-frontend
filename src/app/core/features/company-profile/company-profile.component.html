@@ -105,11 +105,15 @@
 
 <!-- ================= Modal Update Form ================= -->
 @if (isModalOpen() == true) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[rgba(255,255,255,0.5)] font-body-md text-on-background min-h-screen">
-    
+  <div
+    class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-[rgba(255,255,255,0.5)] font-body-md text-on-background min-h-screen"
+  >
     <!-- Backdrop with Blur -->
-    <div aria-hidden="true" class="fixed inset-0 bg-on-background/40 backdrop-blur-sm transition-opacity"></div>
-    
+    <div
+      aria-hidden="true"
+      class="fixed inset-0 bg-on-background/40 backdrop-blur-sm transition-opacity"
+    ></div>
+
     <!-- Modal Panel -->
     <form
       (submit)="updateTenantData()"
@@ -117,10 +121,14 @@
       class="relative w-full max-w-xl transform overflow-hidden rounded-3xl bg-surface-container-lowest text-left align-middle shadow-2xl transition-all border border-secondary-container z-10"
     >
       <!-- Header -->
-      <div class="flex items-center justify-between border-b border-secondary-container px-6 py-4 sm:px-8 sm:py-6">
+      <div
+        class="flex items-center justify-between border-b border-secondary-container px-6 py-4 sm:px-8 sm:py-6"
+      >
         <div>
           <h3 class="font-title-md text-title-md text-on-surface">Update Tenant Details</h3>
-          <p class="mt-1 font-body-md text-body-md text-secondary">Modify company name, industry, or subscription status.</p>
+          <p class="mt-1 font-body-md text-body-md text-secondary">
+            Modify company name, industry, or subscription status.
+          </p>
         </div>
         <button
           (click)="closeUpdateModal()"
@@ -133,16 +141,22 @@
 
       <!-- Body / Form Fields -->
       <div class="px-6 py-6 sm:p-8 space-y-6">
-        
         <!-- Name Field -->
         <div>
-          <label class="block font-label-md text-label-md text-on-surface uppercase mb-1" for="name">
+          <label
+            class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+            for="name"
+          >
             Company Name <span class="text-error">*</span>
           </label>
           <div class="relative">
             <input
-              [class.!border-red-500]="tenantForm.get('name')?.errors && tenantForm.get('name')?.touched"
-              [class.!border-green-500]="tenantForm.get('name')?.valid && tenantForm.get('name')?.touched"
+              [class.!border-red-500]="
+                tenantForm.get('name')?.errors && tenantForm.get('name')?.touched
+              "
+              [class.!border-green-500]="
+                tenantForm.get('name')?.valid && tenantForm.get('name')?.touched
+              "
               class="w-full px-3 py-2 bg-surface-bright border rounded-lg focus:outline-none border-secondary-container transition-all font-body-md text-on-surface"
               id="name"
               formControlName="name"
@@ -159,13 +173,20 @@
 
         <!-- Industry Field -->
         <div>
-          <label class="block font-label-md text-label-md text-on-surface uppercase mb-1" for="industry">
+          <label
+            class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+            for="industry"
+          >
             Industry <span class="text-error">*</span>
           </label>
           <div class="relative">
             <select
-              [class.!border-red-500]="tenantForm.get('industry')?.errors && tenantForm.get('industry')?.touched"
-              [class.!border-green-500]="tenantForm.get('industry')?.valid && tenantForm.get('industry')?.touched"
+              [class.!border-red-500]="
+                tenantForm.get('industry')?.errors && tenantForm.get('industry')?.touched
+              "
+              [class.!border-green-500]="
+                tenantForm.get('industry')?.valid && tenantForm.get('industry')?.touched
+              "
               class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
               id="industry"
               formControlName="industry"
@@ -179,7 +200,9 @@
               <option value="Education & E-Learning">Education & E-Learning</option>
               <option value="Fintech & Financial Services">Fintech & Financial Services</option>
             </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary">
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+            >
               <span class="material-symbols-outlined text-[20px]">expand_more</span>
             </div>
           </div>
@@ -192,44 +215,62 @@
 
         <!-- Subscription Status Field -->
         <div>
-          <label class="block font-label-md text-label-md text-on-surface uppercase mb-1" for="subscriptionStatus">
+          <label
+            class="block font-label-md text-label-md text-on-surface uppercase mb-1"
+            for="subscriptionStatus"
+          >
             Subscription Status <span class="text-error">*</span>
           </label>
           <div class="relative">
             <select
-              [class.!border-red-500]="tenantForm.get('subscriptionStatus')?.errors && tenantForm.get('subscriptionStatus')?.touched"
-              [class.!border-green-500]="tenantForm.get('subscriptionStatus')?.valid && tenantForm.get('subscriptionStatus')?.touched"
+              [class.!border-red-500]="
+                tenantForm.get('subscriptionStatus')?.errors &&
+                tenantForm.get('subscriptionStatus')?.touched
+              "
+              [class.!border-green-500]="
+                tenantForm.get('subscriptionStatus')?.valid &&
+                tenantForm.get('subscriptionStatus')?.touched
+              "
               class="block w-full rounded-lg border border-secondary-container bg-surface-container-lowest px-4 py-2 pr-10 font-body-md text-on-surface outline-none transition-all appearance-none"
               id="subscriptionStatus"
               formControlName="subscriptionStatus"
             >
               <option value="" disabled selected>Select Status</option>
+              <option value="trial">trial</option>
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
               <option value="suspended">Suspended</option>
             </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary">
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-secondary"
+            >
               <span class="material-symbols-outlined text-[20px]">expand_more</span>
             </div>
           </div>
-          @if (tenantForm.get('subscriptionStatus')?.errors && tenantForm.get('subscriptionStatus')?.touched) {
+          @if (
+            tenantForm.get('subscriptionStatus')?.errors &&
+            tenantForm.get('subscriptionStatus')?.touched
+          ) {
             @if (tenantForm.get('subscriptionStatus')?.getError('required')) {
               <app-error-alert message="Subscription Status Is Required" />
             }
           }
         </div>
-
       </div>
 
       <!-- Footer / Actions -->
-      <div class="bg-surface-container-low px-6 py-4 sm:flex sm:flex-row-reverse sm:px-8 border-t border-secondary-container gap-3">
+      <div
+        class="bg-surface-container-low px-6 py-4 sm:flex sm:flex-row-reverse sm:px-8 border-t border-secondary-container gap-3"
+      >
         <!-- زرار الحفظ هيتقفل (disabled) لو الفورم غير صالحة -->
         <button
           [disabled]="tenantForm.invalid"
           type="submit"
           class="inline-flex w-full gap-1 items-center disabled:opacity-50 disabled:cursor-not-allowed justify-center rounded-lg bg-primary-container px-6 py-2.5 font-label-md text-label-md text-on-primary shadow-sm hover:bg-primary transition-colors cursor-pointer sm:w-auto font-bold tracking-wide"
         >
-          <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1">save</span>
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1"
+            >save</span
+          >
           Save Changes
         </button>
         <button
