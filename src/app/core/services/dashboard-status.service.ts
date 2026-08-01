@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Service, signal } from '@angular/core';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { IMainResposne } from '../models/main-response.model';
 import { IDashboardStatus } from '../models/dashboard-status.model';
 
