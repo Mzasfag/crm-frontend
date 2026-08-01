@@ -173,4 +173,13 @@ export class TeamComponent {
       key: 'positionDialog',
     });
   }
+
+  // get admin and manager users count
+  getAdminAndMangerCount() {
+    const filterArr = this.userList()?.filter((user) => {
+      return user?.role.toLowerCase() == 'manager' || user?.role?.toLowerCase() == 'admin';
+    });
+
+    return filterArr?.length;
+  }
 }
