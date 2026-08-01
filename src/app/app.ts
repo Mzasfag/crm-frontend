@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { AuthService } from './core/services/auth.service';
 import { LoaderComponent } from './shared/components/loader/loader.component';
@@ -21,9 +21,11 @@ export class App implements OnInit {
   private settingsService = inject(SettingsService);
   private cookieService = inject(CookieService);
   private notifyService = inject(NotifyService);
+  private router = inject(Router);
   ngOnInit(): void {
     if (isPlatformBrowser(this.platfromId)) {
       const tokenFromCookie = this.cookieService.get('token');
+      const hasToken = this.cookieService.check('token');
       const userDataFromCookie = this.cookieService.get('userData');
       const userSettings = localStorage.getItem('userSettings');
       if (userSettings !== undefined) {
@@ -45,6 +47,10 @@ export class App implements OnInit {
       } else {
         // exist user data
         this.authService.userData.set(JSON.parse(userDataFromCookie));
+      }
+
+      if (!hasToken) {
+        this.router.navigateByUrl('/');
       }
     }
   }
