@@ -164,7 +164,7 @@ export class DealsComponent implements OnInit {
   }
 
   handleDealForm(data: boolean) {
-    this.getAllDeals();
+  this.getAllDeals();
     this.dealFormIsOpen.set(data);
   }
 }
