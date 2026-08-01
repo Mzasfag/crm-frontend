@@ -194,7 +194,7 @@ export class TeamComponent {
   // another role member
   getAnotherRoleMember(){
     const filterdArr = this.userList()?.filter((user)=>{
-      return user?.role?.toLowerCase() == 'developer' || user?.role?.trim().toLowerCase() == 'designer' || user?.role?.trim().toLowerCase() == 'content creator';
+      return user?.role?.toLowerCase() == 'developer' || user?.role?.trim().toLowerCase() == 'designer' || user?.role?.trim().toLowerCase() == 'contentcreator';
     });
     return filterdArr?.length;
   }
