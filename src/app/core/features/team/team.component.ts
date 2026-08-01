@@ -182,4 +182,20 @@ export class TeamComponent {
 
     return filterArr?.length;
   }
+
+
+  // sales member
+  getSalesMember(){
+    const filterdArr = this.userList()?.filter((user)=>{
+      return user?.role?.toLowerCase() == 'sales';
+    });
+    return filterdArr?.length;
+  }
+  // another role member
+  getAnotherRoleMember(){
+    const filterdArr = this.userList()?.filter((user)=>{
+      return user?.role?.toLowerCase() == 'developer' || user?.role?.trim().toLowerCase() == 'designer' || user?.role?.trim().toLowerCase() == 'content creator';
+    });
+    return filterdArr?.length;
+  }
 }
